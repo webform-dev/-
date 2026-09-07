@@ -943,65 +943,36 @@ function handleFormSubmit(event) {
 
     hiddenForm.submit();
 
-    setTimeout(function() {
-        hiddenForm.remove();
-    }, 1000);
+setTimeout(function() {
+
+    hiddenForm.remove();
+
+    [
+        'name',
+        'birthYear',
+        'phone',
+        'email',
+        'zipcode',
+        'desiredLocation',
+        'pref_work',
+        'experience',
+        'qualifications',
+        'timing',
+        'employmentType',
+        'conditions'
+    ].forEach(function(name) {
+        localStorage.removeItem('form_data_' + name);
+    });
+
+    document.getElementById('mainHeader').style.display = 'none';
+    document.getElementById('mainFooter').style.display = 'none';
+    document.getElementById('formContainer').style.display = 'none';
+    document.getElementById('successMessage').style.display = 'block';
+
+    window.scrollTo(0, 0);
+
+}, 1500);
 }
-   window.addEventListener('message', function(event) {
-
-    // 同じGitHub Pages配下の result.html からだけ受け取る
-    if (event.origin !== window.location.origin) {
-        return;
-    }
-
-    var response = event.data;
-
-    if (
-        !response ||
-        response.type !== 'xwork-form-result'
-    ) {
-        return;
-    }
-
-    var btn = document.getElementById('submitBtn');
-
-    if (
-        response.status === 'success' ||
-        response.status === 'duplicate'
-    ) {
-
-        [
-            'name',
-            'birthYear',
-            'phone',
-            'email',
-            'zipcode',
-            'desiredLocation',
-            'pref_work',
-            'experience',
-            'qualifications',
-            'timing',
-            'employmentType',
-            'conditions'
-        ].forEach(function(name) {
-            localStorage.removeItem('form_data_' + name);
-        });
-
-        document.getElementById('mainHeader').style.display = 'none';
-        document.getElementById('mainFooter').style.display = 'none';
-        document.getElementById('formContainer').style.display = 'none';
-        document.getElementById('successMessage').style.display = 'block';
-
-        window.scrollTo(0, 0);
-
-    } else {
-
-        alert('送信時にエラーが発生しました。');
-
-        btn.innerText = '回答を送信する';
-        btn.disabled = false;
-    }
-}); 
 </script>
   <iframe
   name="gasSubmitFrame"
