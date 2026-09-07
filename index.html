@@ -947,6 +947,66 @@ function handleFormSubmit(event) {
         hiddenForm.remove();
     }, 1000);
 }
+    window.addEventListener('message', function(event) {
+
+    var response = event.data;
+
+    // GASから返ってきた結果以外は無視
+    if (
+        !response ||
+        !['success', 'duplicate', 'error'].includes(response.status)
+    ) {
+        return;
+    }
+
+    var btn = document.getElementById('submitBtn');
+
+    if (response.status === 'success') {
+
+        // 入力内容の一時保存を削除
+        [
+            'name',
+            'birthYear',
+            'phone',
+            'email',
+            'zipcode',
+            'desiredLocation',
+            'pref_work',
+            'experience',
+            'qualifications',
+            'timing',
+            'employmentType',
+            'conditions'
+        ].forEach(function(name) {
+            localStorage.removeItem('form_data_' + name);
+        });
+
+        // フォームを消してサンクス画面を表示
+        document.getElementById('mainHeader').style.display = 'none';
+        document.getElementById('mainFooter').style.display = 'none';
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+
+        window.scrollTo(0, 0);
+
+    } else if (response.status === 'duplicate') {
+
+        alert('既に同じお名前と生まれ年でのご登録がございます。');
+
+        btn.innerText = '回答を送信する';
+        btn.disabled = false;
+
+    } else {
+
+        alert(
+            '送信時にエラーが発生しました。' +
+            (response.message ? '\n' + response.message : '')
+        );
+
+        btn.innerText = '回答を送信する';
+        btn.disabled = false;
+    }
+});
 </script>
   <iframe
   name="gasSubmitFrame"
