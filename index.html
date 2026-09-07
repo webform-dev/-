@@ -891,7 +891,7 @@ function handleFormSubmit(event) {
         email:
             form.elements['email'].value.trim(),
 
-        zipcode:
+       zipcode:
     form.elements['zipcode'].value.trim(),
 
 pref_home:
@@ -901,9 +901,9 @@ desiredLocation:
     form.elements['desiredLocation'].value.trim(),
 
 pref_work:
-            Array.isArray(prefWorkValues)
-                ? prefWorkValues.join(', ')
-                : prefWorkValues,
+    Array.isArray(prefWorkValues)
+        ? prefWorkValues.join(', ')
+        : prefWorkValues,
 
         experience:
             expChecked ? expChecked.value : '',
