@@ -947,23 +947,29 @@ function handleFormSubmit(event) {
         hiddenForm.remove();
     }, 1000);
 }
-    window.addEventListener('message', function(event) {
+   window.addEventListener('message', function(event) {
+
+    // 同じGitHub Pages配下の result.html からだけ受け取る
+    if (event.origin !== window.location.origin) {
+        return;
+    }
 
     var response = event.data;
 
-    // GASから返ってきた結果以外は無視
     if (
         !response ||
-        !['success', 'duplicate', 'error'].includes(response.status)
+        response.type !== 'xwork-form-result'
     ) {
         return;
     }
 
     var btn = document.getElementById('submitBtn');
 
-    if (response.status === 'success') {
+    if (
+        response.status === 'success' ||
+        response.status === 'duplicate'
+    ) {
 
-        // 入力内容の一時保存を削除
         [
             'name',
             'birthYear',
@@ -981,7 +987,6 @@ function handleFormSubmit(event) {
             localStorage.removeItem('form_data_' + name);
         });
 
-        // フォームを消してサンクス画面を表示
         document.getElementById('mainHeader').style.display = 'none';
         document.getElementById('mainFooter').style.display = 'none';
         document.getElementById('formContainer').style.display = 'none';
@@ -989,24 +994,14 @@ function handleFormSubmit(event) {
 
         window.scrollTo(0, 0);
 
-    } else if (response.status === 'duplicate') {
-
-        alert('既に同じお名前と生まれ年でのご登録がございます。');
-
-        btn.innerText = '回答を送信する';
-        btn.disabled = false;
-
     } else {
 
-        alert(
-            '送信時にエラーが発生しました。' +
-            (response.message ? '\n' + response.message : '')
-        );
+        alert('送信時にエラーが発生しました。');
 
         btn.innerText = '回答を送信する';
         btn.disabled = false;
     }
-});
+}); 
 </script>
   <iframe
   name="gasSubmitFrame"
