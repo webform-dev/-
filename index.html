@@ -784,7 +784,6 @@ async function handleZipInput() {
                 desiredLocInput.value = info.address1;
                 localStorage.setItem('form_data_desiredLocation', info.address1);
                 
-                document.getElementById('zipcode').required = false;
             } else {
                 zipError.style.display = 'block';
                 this.style.borderColor = '#e60000';
@@ -858,10 +857,21 @@ function handleFormSubmit(event) {
         conditionsArr.push(cb.value);
     });
 
-    var prefWorkValues =
-        prefWorkChoices
-        ? prefWorkChoices.getValue(true)
-        : [];
+    var prefWorkValues = [];
+
+    if (prefWorkChoices) {
+        prefWorkValues = prefWorkChoices.getValue(true);
+    } else {
+        prefWorkValues = Array.from(
+            form.elements['pref_work'].selectedOptions || []
+        ).map(function(option) {
+            return option.value;
+        });
+    }
+
+    if (!Array.isArray(prefWorkValues)) {
+        prefWorkValues = prefWorkValues ? [prefWorkValues] : [];
+    }
 
     var expChecked =
         form.querySelector(
@@ -891,19 +901,17 @@ function handleFormSubmit(event) {
         email:
             form.elements['email'].value.trim(),
 
-       zipcode:
-    form.elements['zipcode'].value.trim(),
+        zipcode:
+            form.elements['zipcode'].value.trim(),
 
-pref_home:
-    form.elements['desiredLocation'].value.trim(),
+        pref_home:
+            form.elements['desiredLocation'].value.trim(),
 
-desiredLocation:
-    form.elements['desiredLocation'].value.trim(),
+        desiredLocation:
+            form.elements['desiredLocation'].value.trim(),
 
-pref_work:
-    Array.isArray(prefWorkValues)
-        ? prefWorkValues.join(', ')
-        : prefWorkValues,
+        pref_work:
+            prefWorkValues.join(', '),
 
         experience:
             expChecked ? expChecked.value : '',
