@@ -892,12 +892,15 @@ function handleFormSubmit(event) {
             form.elements['email'].value.trim(),
 
         zipcode:
-            form.elements['zipcode'].value.trim(),
+    form.elements['zipcode'].value.trim(),
 
-        desiredLocation:
-            form.elements['desiredLocation'].value.trim(),
+pref_home:
+    form.elements['desiredLocation'].value.trim(),
 
-        pref_work:
+desiredLocation:
+    form.elements['desiredLocation'].value.trim(),
+
+pref_work:
             Array.isArray(prefWorkValues)
                 ? prefWorkValues.join(', ')
                 : prefWorkValues,
@@ -919,7 +922,7 @@ function handleFormSubmit(event) {
     };
 
     var gasUrl =
-        'https://script.google.com/macros/s/AKfycbyAQX3DIz1AyuACMcf8IqQwWNzr30wLTASBoGJUEGIxsQ2sqa9iaHP5GKMkDDIlVGpglw/exec';
+        'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbyAQX3DIz1AyuACMcf8IqQwWNzr30wLTASBoGJUEGIxsQ2sqa9iaHP5GKMkDDIlVGpglw/exec';
 
     var hiddenForm =
         document.createElement('form');
