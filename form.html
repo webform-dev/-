@@ -35,54 +35,129 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   color: var(--text);
-  background: var(--blue-soft);
+  background: #edf7ff;
+}
+
+/* ヘッダー画像とフォームを1枚のLPとしてつなげる */
+.lp-shell {
+  width: calc(100% - 24px);
+  max-width: 800px;
+  margin: 22px auto 32px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 34px rgba(0, 82, 204, .12);
+}
+
+.brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 48px;
+  padding: 7px 22px;
+  background: #fff;
+}
+
+.brand-logo-svg {
+  display: block;
+  width: 142px;
+  height: auto;
+  fill: #0052cc;
 }
 
 .hero {
   width: 100%;
   background: #fff;
-  border-bottom: 1px solid #dcecff;
 }
 
+/* 元画像上部の生成ロゴ部分を隠し、写真部分だけを表示 */
 .hero-inner {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  margin: 0;
+  overflow: hidden;
 }
 
 .hero-image {
   display: block;
   width: 100%;
   height: auto;
+  margin-top: -37px;
 }
 
 .container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 28px 38px 36px;
+  background: #fff;
+  border-radius: 0;
+  border-top: 0;
+  box-shadow: none;
+}
+
+/* サンクス画面だけは単独カード */
+#successMessage {
   width: calc(100% - 24px);
   max-width: 800px;
   margin: 22px auto 32px;
-  padding: 32px 38px;
+  border-radius: 16px;
+  box-shadow: 0 12px 34px rgba(0, 82, 204, .12);
+}
+
+/* ヘッダー下のスクロール誘導 */
+.scroll-cue {
+  display: flex;
+  width: 100%;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
   background: #fff;
-  border-radius: 14px;
-  border-top: 5px solid var(--blue);
-  box-shadow: 0 10px 30px rgba(0, 82, 204, .10);
+  text-decoration: none;
 }
 
-.form-heading {
-  text-align: center;
-  margin-bottom: 28px;
+.scroll-cue::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border-right: 3px solid var(--blue);
+  border-bottom: 3px solid var(--blue);
+  transform: rotate(45deg);
+  animation: cueDown 1.45s ease-in-out infinite;
 }
 
-.form-heading h1 {
-  margin: 0 0 8px;
-  font-size: 21px;
-  line-height: 1.45;
+@keyframes cueDown {
+  0%, 100% {
+    transform: translateY(-4px) rotate(45deg);
+    opacity: .45;
+  }
+  50% {
+    transform: translateY(5px) rotate(45deg);
+    opacity: 1;
+  }
 }
 
-.form-heading p {
-  margin: 0;
-  color: var(--subtext);
-  font-size: 13px;
-  line-height: 1.7;
+/* 個人情報など、短い入力欄は横並びにして縦の長さを圧縮 */
+.compact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 18px;
+  margin-top: 4px;
+}
+
+.compact-grid.name-age {
+  grid-template-columns: minmax(0, 1.55fr) minmax(150px, .75fr);
+}
+
+.compact-grid .form-group {
+  margin-bottom: 8px;
+}
+
+.compact-grid .question-label {
+  margin-bottom: 8px;
+}
+
+.compact-full {
+  margin-top: 18px;
 }
 
 .form-group { margin-bottom: 30px; }
@@ -96,18 +171,6 @@ body {
   font-weight: 700;
 }
 
-.question-number {
-  display: inline-flex;
-  width: 27px;
-  height: 27px;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 27px;
-  border-radius: 50%;
-  color: #fff;
-  background: var(--blue);
-  font-size: 12px;
-}
 
 .optional {
   color: #7890a8;
@@ -233,13 +296,6 @@ input[type="checkbox"] {
   cursor: not-allowed;
 }
 
-.submit-note {
-  margin: 10px auto 0;
-  text-align: center;
-  color: #7a8fa4;
-  font-size: 11px;
-  line-height: 1.6;
-}
 
 .choices { margin-bottom: 0; }
 
@@ -344,18 +400,44 @@ input[type="checkbox"] {
 }
 
 @media (max-width: 640px) {
-  .container {
+  .lp-shell {
     width: calc(100% - 18px);
-    margin-top: 14px;
-    padding: 24px 16px 28px;
-    border-radius: 11px;
+    margin: 9px auto 24px;
+    border-radius: 12px;
   }
 
-  .form-heading h1 { font-size: 18px; }
+  .container {
+    padding: 24px 16px 28px;
+  }
+
+  #successMessage {
+    width: calc(100% - 18px);
+    margin: 14px auto 24px;
+    border-radius: 12px;
+  }
 
   .radio-grid,
   .check-grid-inner {
     grid-template-columns: 1fr;
+  }
+
+  .compact-grid,
+  .compact-grid.name-age {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .scroll-cue {
+    height: 34px;
+  }
+
+  .brand-bar {
+    height: 44px;
+    padding: 7px 14px;
+  }
+
+  .brand-logo-svg {
+    width: 132px;
   }
 }
 </style>
@@ -363,30 +445,39 @@ input[type="checkbox"] {
 
 <body>
 
-<header class="hero" id="mainHeader">
-  <div class="hero-inner">
-    <img
-      src="hero-header.png"
-      alt="クロスワーク 現場職向け転職サービス"
-      class="hero-image"
-    >
-  </div>
-</header>
-
-<main>
-  <div class="container" id="formContainer">
-    <div class="form-heading">
-      <h1>まずはご希望の条件を教えてください</h1>
-      <p>ご入力内容をもとに、業界特化のエージェントが求人探しから転職活動まで無料でサポートします。</p>
+<div class="lp-shell" id="lpShell">
+  <header class="hero" id="mainHeader">
+    <div class="brand-bar">
+      <!-- 既存フォームで使用していたオリジナルのクロスワークSVGロゴ -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 205 40" width="205" height="40" class="brand-logo-svg" aria-label="クロスワーク">
+        <path d="M14.3522 0.550935H5.38155V4.85151C5.38155 9.0048 4.54706 12.5395 0.43428 16.3688L0.046875 16.7223L5.53058 24.2041L6.03722 23.7622C10.0904 20.1686 12.5938 16.1037 13.6667 11.3907H21.6539V13.6294C21.6539 20.3748 15.4847 28.7108 5.14312 30.9495L4.30865 31.1262L9.16652 39.4623L9.64337 39.315C22.7566 35.25 31.2206 25.2056 31.2206 13.7767V3.20198H14.3522V0.521484V0.550935Z"></path>
+        <path d="M37.5977 37.8122H67.6687V2.78906H37.5977V37.8122ZM58.7576 11.1546V29.5056H46.5087V11.1546H58.7576Z"></path>
+        <path d="M103.106 10.9484L103.196 10.8011V2.78906H75.1213V11.1546H92.2281C88.6518 17.4581 81.7674 26.0298 73.81 35.8681L72.2305 37.8122H83.4661L83.6449 37.5766C86.1484 34.4248 88.6518 31.2141 91.0956 28.0034L96.5495 37.8122H107.07L96.7581 20.2859C99.4702 16.4566 101.497 13.4816 103.076 10.9484H103.106Z"></path>
+        <path d="M109.901 20.7279H118.752V10.7423H132.193V15.8088C132.193 20.7574 128.498 27.2966 120.332 29.9476L119.736 30.1244L122.537 38.5488L123.133 38.3131C134.339 33.9831 141.313 25.4114 141.313 15.8971V2.75977H109.871V20.6984L109.901 20.7279Z"></path>
+        <path d="M169.654 16.0742H146.199V24.4397H169.654V16.0742Z"></path>
+        <path d="M187.327 3.26042V0.609375H178.416V4.88049C178.416 8.97487 177.581 12.5096 173.528 16.2799L173.141 16.6334L178.595 24.0563L179.101 23.6145C183.125 20.0503 185.598 16.0443 186.671 11.3313H194.569V13.5405C194.569 20.227 188.459 28.4747 178.207 30.7134L177.373 30.8901L182.171 39.1672L182.648 39.0199C195.642 34.9845 204.046 25.0578 204.046 13.7173V3.23095H187.327V3.26042Z"></path>
+      </svg>
     </div>
 
-    <div id="submitError"></div>
+    <div class="hero-inner">
+      <img
+        src="hero-header.png"
+        alt="現場職向け転職サービス"
+        class="hero-image"
+      >
+    </div>
+  </header>
+
+  <a class="scroll-cue" href="#offerForm" aria-label="入力フォームへ進む"></a>
+
+  <main>
+    <div class="container" id="formContainer">
+      <div id="submitError"></div>
 
     <form id="offerForm" novalidate onsubmit="handleFormSubmit(event)">
 
       <div class="form-group">
         <div class="question-label">
-          <span class="question-number">1</span>
           <span>転職で重視したいポイント <span class="optional">（複数選択可）</span></span>
         </div>
         <div class="check-grid-inner">
@@ -403,7 +494,6 @@ input[type="checkbox"] {
 
       <div class="form-group">
         <div class="question-label">
-          <span class="question-number">2</span>
           <span>保有資格</span>
         </div>
         <p class="helper-text">該当する資格をすべてお選びください。「資格無し」も選択できます。</p>
@@ -452,7 +542,8 @@ input[type="checkbox"] {
       </div>
 
       <div class="form-group">
-        <div class="question-label"><span class="question-number">3</span><span>経験</span></div>
+        <div class="question-label">
+          <span>経験</span></div>
         <div class="radio-grid">
           <label class="radio-label"><input type="radio" name="experience" value="施工管理経験がある" required>施工管理経験がある</label>
           <label class="radio-label"><input type="radio" name="experience" value="設計経験がある">設計経験がある</label>
@@ -464,7 +555,8 @@ input[type="checkbox"] {
       </div>
 
       <div class="form-group">
-        <div class="question-label"><span class="question-number">4</span><span>ご希望の転職時期</span></div>
+        <div class="question-label">
+          <span>ご希望の転職時期</span></div>
         <div class="radio-grid">
           <label class="radio-label"><input type="radio" name="timing" value="すぐにでも" required>すぐにでも</label>
           <label class="radio-label"><input type="radio" name="timing" value="1ヶ月以内">1ヶ月以内</label>
@@ -476,7 +568,8 @@ input[type="checkbox"] {
       </div>
 
       <div class="form-group">
-        <div class="question-label"><span class="question-number">5</span><span>ご希望の雇用形態</span></div>
+        <div class="question-label">
+          <span>ご希望の雇用形態</span></div>
         <div class="radio-grid">
           <label class="radio-label"><input type="radio" name="employmentType" value="正社員" required>正社員</label>
           <label class="radio-label"><input type="radio" name="employmentType" value="業務委託">業務委託</label>
@@ -485,84 +578,87 @@ input[type="checkbox"] {
         </div>
       </div>
 
-      <div class="form-group">
-        <div class="question-label"><span class="question-number">6</span><span>名前（フルネーム）</span></div>
-        <input type="text" name="name" autocomplete="name" placeholder="例：山田 太郎" maxlength="50" required>
-      </div>
-
-      <div class="form-group">
-        <div class="question-label"><span class="question-number">7</span><span>ご年齢</span></div>
-        <select name="age" id="age" required>
-          <option value="">選択してください</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <div class="question-label"><span class="question-number">8</span><span>電話番号</span></div>
-        <input
-          type="tel"
-          name="phone"
-          id="phone"
-          inputmode="numeric"
-          autocomplete="tel"
-          placeholder="例：09012345678"
-          maxlength="11"
-          pattern="^0\d{9,10}$"
-          title="ハイフンなしの10〜11桁で入力してください"
-          required
-        >
-      </div>
-
-      <div class="form-group">
-        <div class="question-label">
-          <span class="question-number">9</span>
-          <span>メールアドレス <span class="optional">（任意）</span></span>
+      <div class="compact-grid name-age">
+        <div class="form-group">
+          <div class="question-label"><span>名前（フルネーム）</span></div>
+          <input type="text" name="name" autocomplete="name" placeholder="例：山田 太郎" maxlength="50" required>
         </div>
-        <input type="email" name="email" id="email" autocomplete="email" placeholder="例：sample@example.com">
+
+        <div class="form-group">
+          <div class="question-label"><span>ご年齢</span></div>
+          <select name="age" id="age" required>
+            <option value="">選択してください</option>
+          </select>
+        </div>
       </div>
 
-      <div class="form-group">
-        <div class="question-label"><span class="question-number">10</span><span>お住まい</span></div>
-        <select id="pref_home" name="pref_home" required>
-          <option value="">都道府県を選択してください</option>
-        </select>
+      <div class="compact-grid">
+        <div class="form-group">
+          <div class="question-label"><span>電話番号</span></div>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            inputmode="numeric"
+            autocomplete="tel"
+            placeholder="例：09012345678"
+            maxlength="11"
+            pattern="^0\d{9,10}$"
+            title="ハイフンなしの10〜11桁で入力してください"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <div class="question-label">
+            <span>メールアドレス <span class="optional">（任意）</span></span>
+          </div>
+          <input type="email" name="email" id="email" autocomplete="email" placeholder="例：sample@example.com">
+        </div>
       </div>
 
-      <div class="form-group">
-        <div class="question-label"><span class="question-number">11</span><span>希望勤務地</span></div>
-        <p class="helper-text">お住まいを選択すると自動で反映されます。</p>
-        <input
-          type="text"
-          id="desiredLocation"
-          name="desiredLocation"
-          placeholder="お住まいから自動で反映"
-          readonly
-          required
-        >
+      <div class="compact-grid">
+        <div class="form-group">
+          <div class="question-label"><span>お住まい</span></div>
+          <select id="pref_home" name="pref_home" required>
+            <option value="">都道府県を選択してください</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="question-label"><span>希望勤務地</span></div>
+          <input
+            type="text"
+            id="desiredLocation"
+            name="desiredLocation"
+            placeholder="お住まいから自動反映"
+            readonly
+            required
+          >
+        </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group compact-full">
         <div class="question-label">
-          <span class="question-number">12</span>
           <span>お住まい以外をご希望の場合は選択 <span class="optional">（任意・複数選択可）</span></span>
         </div>
         <select id="pref_work" name="pref_work" multiple></select>
       </div>
 
-      <button type="submit" class="submit-btn" id="submitBtn">無料で求人をチェックする</button>
-      <p class="submit-note">送信後、担当者よりご連絡させていただきます。</p>
+      <button type="submit" class="submit-btn" id="submitBtn">希望条件を送信する</button>
     </form>
-  </div>
+    </div>
+  </main>
+</div>
 
-  <div class="container" id="successMessage">
+<div class="container" id="successMessage">
     <div class="success-check">✓</div>
     <h2 class="success-title">ご回答の受付が完了しました！</h2>
     <p class="success-desc">
       ご回答ありがとうございます。<br>
       内容を確認のうえ、担当者よりご連絡させていただきます。
     </p>
-  </div>
-</main>
+</div>
 
 <footer class="site-footer" id="mainFooter">
   <div class="footer-links">
@@ -595,7 +691,7 @@ var currentRequestId = '';
 var submitTimeoutId = null;
 
 // ★ 新しいGASをデプロイしたあと、ここだけ /exec URLに置き換える
-var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbzhoZL-j-93rFcRGDO6Y8DrSTdk4xuHPE64WC2TgLI/dev';
+var gasUrl = 'PASTE_NEW_GAS_WEB_APP_EXEC_URL_HERE';
 
 document.addEventListener('DOMContentLoaded', function() {
   initAgeOptions();
@@ -948,7 +1044,7 @@ function handleFormSubmit(event) {
   submitTimeoutId = window.setTimeout(function() {
     hiddenForm.remove();
     btn.disabled = false;
-    btn.textContent = '無料で求人をチェックする';
+    btn.textContent = '希望条件を送信する';
 
     submitError.textContent =
       '通信に時間がかかっています。恐れ入りますが、通信環境をご確認のうえ再度お試しください。';
@@ -1000,7 +1096,7 @@ window.addEventListener('message', function(event) {
   }
 
   btn.disabled = false;
-  btn.textContent = '無料で求人をチェックする';
+  btn.textContent = '希望条件を送信する';
 
   submitError.textContent =
     data.message || '送信できませんでした。恐れ入りますが、再度お試しください。';
@@ -1032,9 +1128,8 @@ function clearStoredForm() {
 }
 
 function showSuccess() {
-  document.getElementById('mainHeader').style.display = 'none';
+  document.getElementById('lpShell').style.display = 'none';
   document.getElementById('mainFooter').style.display = 'none';
-  document.getElementById('formContainer').style.display = 'none';
   document.getElementById('successMessage').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
