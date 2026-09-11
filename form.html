@@ -714,7 +714,7 @@ input[type="checkbox"] {
             inputmode="numeric"
             autocomplete="tel"
             placeholder="例：09012345678"
-            maxlength="11"
+            maxlength="18"
             pattern="(?:0[1-9][0-9]{8}|(?:050|070|080|090)[0-9]{8})"
             title="有効な日本の電話番号をハイフンなしで入力してください"
             required
@@ -854,7 +854,7 @@ var currentRequestId = '';
 var submitTimeoutId = null;
 
 // ★ 新しいGASをデプロイしたあと、ここだけ /exec URLに置き換える
-var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbz785hLA9cxkM7gz6ZjUg9VHm0X6uMwmC2k-WmJE-zfxZQsJ85mrJ91A98ALd3qgkI/exec';
+var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbzDLxyhUby5gHI0NQNRz3ro1L_VScmUyz_N2FtrePkXQWtcwgVWgwzsiZMUXbEniEuk/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
   initAgeOptions();
@@ -1032,53 +1032,140 @@ function setRadioGroupError(name, errorId) {
 }
 
 function normalizePhoneNumber(value) {
-  return String(value || '')
-    .replace(/[０-９]/g, function(char) {
-      return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
-    })
-    .replace(/[^\d]/g, '');
+  var raw = String(value || '').trim();
+
+  raw = raw.replace(/[０-９]/g, function(char) {
+    return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
+  });
+
+  var compact = raw.replace(/[\s\-‐‑‒–—―ー()（）]/g, '');
+
+  if (/^\+81\d+$/.test(compact)) {
+    compact = '0' + compact.slice(3);
+  }
+
+  return compact.replace(/[^\d]/g, '');
+}
+
+function hasOnlyAllowedPhoneCharacters(value) {
+  var raw = String(value || '').trim();
+  return /^[+＋]?[0-9０-９\s\-‐‑‒–—―ー()（）]+$/.test(raw);
+}
+
+function isRepeatedPattern(value) {
+  if (!value || value.length < 6) return false;
+
+  if (/^(\d)\1+$/.test(value)) return true;
+
+  for (var size = 1; size <= Math.floor(value.length / 2); size++) {
+    if (value.length % size !== 0) continue;
+
+    var unit = value.slice(0, size);
+    if (unit.repeat(value.length / size) === value) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function isSimpleSequence(value) {
+  if (!value || value.length < 6) return false;
+
+  var ascending = '012345678901234567890123456789';
+  var descending = '987654321098765432109876543210';
+
+  return ascending.indexOf(value) !== -1 ||
+         descending.indexOf(value) !== -1;
+}
+
+function getPhoneValidationMessage(value) {
+  var raw = String(value || '').trim();
+
+  if (!raw) {
+    return '※電話番号を入力してください';
+  }
+
+  if (!hasOnlyAllowedPhoneCharacters(raw)) {
+    return '※電話番号には数字・ハイフン・括弧のみ使用できます';
+  }
+
+  var phone = normalizePhoneNumber(raw);
+
+  if (phone.length < 10 || phone.length > 11) {
+    return '※電話番号は10桁または11桁で入力してください';
+  }
+
+  if (phone.charAt(0) !== '0') {
+    return '※日本国内の電話番号は0から始まる番号を入力してください';
+  }
+
+  if (/^00/.test(phone) || /^010/.test(phone)) {
+    return '※日本国内で連絡可能な電話番号を入力してください';
+  }
+
+  if (phone.length === 11) {
+    if (!/^(050|060|070|080|090)\d{8}$/.test(phone)) {
+      return '※11桁の電話番号は050・060・070・080・090から始まる番号を入力してください';
+    }
+  }
+
+  if (phone.length === 10) {
+    if (!/^0[1-9]\d{8}$/.test(phone)) {
+      return '※正しい10桁の電話番号を入力してください';
+    }
+
+    if (/^(050|060|070|080|090)/.test(phone)) {
+      return '※携帯・IP電話番号は11桁で入力してください';
+    }
+  }
+
+  if (isRepeatedPattern(phone) || isSimpleSequence(phone)) {
+    return '※実際に連絡可能な電話番号を入力してください';
+  }
+
+  var subscriberPart = phone.length === 11
+    ? phone.slice(3)
+    : phone.slice(-7);
+
+  if (
+    isRepeatedPattern(subscriberPart) ||
+    isSimpleSequence(subscriberPart)
+  ) {
+    return '※実際に連絡可能な電話番号を入力してください';
+  }
+
+  return '';
 }
 
 function isPlausibleJapanesePhone(value) {
-  var phone = normalizePhoneNumber(value);
-
-  // 固定電話・フリーダイヤル等：10桁 / 携帯・IP電話：11桁
-  var formatOk =
-    /^0[1-9]\d{8}$/.test(phone) ||
-    /^(050|070|080|090)\d{8}$/.test(phone);
-
-  if (!formatOk) return false;
-
-  // 000... のように同じ数字だけの番号を除外
-  if (/^(\d)\1+$/.test(phone)) return false;
-
-  // 090-0000-0000 / 080-1111-1111 など明らかなダミーを除外
-  if (/^(050|070|080|090)(\d)\2{7}$/.test(phone)) return false;
-
-  return true;
+  return getPhoneValidationMessage(value) === '';
 }
 
 function validatePhoneField() {
   var field = document.getElementById('phone');
   var error = document.getElementById('phone-error');
+  var message = getPhoneValidationMessage(field.value);
+
+  if (message) {
+    field.setCustomValidity(message.replace(/^※/, ''));
+    if (error) {
+      error.textContent = message;
+      error.classList.add('show');
+    }
+    return false;
+  }
+
   var normalized = normalizePhoneNumber(field.value);
+  field.value = normalized;
+  field.setCustomValidity('');
 
-  // 入力されている場合は整形した数字を表示値にも反映
-  if (field.value) {
-    field.value = normalized;
+  if (error) {
+    error.textContent = '※正しい電話番号を入力してください';
+    error.classList.remove('show');
   }
 
-  var valid = isPlausibleJapanesePhone(normalized);
-
-  if (!valid) {
-    field.setCustomValidity('正しい電話番号を入力してください');
-    if (error) error.classList.add('show');
-  } else {
-    field.setCustomValidity('');
-    if (error) error.classList.remove('show');
-  }
-
-  return valid;
+  return true;
 }
 
 function validateVisibleFields() {
@@ -1190,17 +1277,21 @@ function handleFormSubmit(event) {
     return;
   }
 
-  var phone = normalizePhoneNumber(form.elements['phone'].value);
-  form.elements['phone'].value = phone;
+  var phoneField = form.elements['phone'];
+  var phoneMessage = getPhoneValidationMessage(phoneField.value);
 
-  if (!isPlausibleJapanesePhone(phone)) {
-    form.elements['phone'].setCustomValidity('正しい電話番号を入力してください');
-    document.getElementById('phone-error').classList.add('show');
-    form.elements['phone'].focus();
+  if (phoneMessage) {
+    phoneField.setCustomValidity(phoneMessage.replace(/^※/, ''));
+    var phoneError = document.getElementById('phone-error');
+    phoneError.textContent = phoneMessage;
+    phoneError.classList.add('show');
+    phoneField.focus();
     return;
   }
 
-  form.elements['phone'].setCustomValidity('');
+  var phone = normalizePhoneNumber(phoneField.value);
+  phoneField.value = phone;
+  phoneField.setCustomValidity('');
   document.getElementById('phone-error').classList.remove('show');
 
   var conditions = Array.from(
