@@ -939,10 +939,45 @@ function handleFormSubmit(event) {
   });
 
   document.body.appendChild(hiddenForm);
+
+  var submitFrame = document.getElementById('gasSubmitFrame');
+  var submitFinished = false;
+
+  function finishSubmit() {
+    if (submitFinished) return;
+
+    submitFinished = true;
+
+    if (submitTimeoutId) {
+      clearTimeout(submitTimeoutId);
+      submitTimeoutId = null;
+    }
+
+    submitFrame.removeEventListener('load', finishSubmit);
+
+    if (hiddenForm && hiddenForm.parentNode) {
+      hiddenForm.remove();
+    }
+
+    showSuccess();
+  }
+
+  // GASの処理完了後、hidden iframeの読み込み完了を検知して
+  // サンクス画面へ切り替える
+  submitFrame.addEventListener('load', finishSubmit);
+
   hiddenForm.submit();
 
   submitTimeoutId = window.setTimeout(function() {
-    hiddenForm.remove();
+    if (submitFinished) return;
+
+    submitFinished = true;
+    submitFrame.removeEventListener('load', finishSubmit);
+
+    if (hiddenForm && hiddenForm.parentNode) {
+      hiddenForm.remove();
+    }
+
     btn.disabled = false;
     btn.textContent = '希望条件を送信する';
 
@@ -963,49 +998,6 @@ function getCheckedValue(form, name) {
   );
   return checked ? checked.value : '';
 }
-
-window.addEventListener('message', function(event) {
-  var data = event.data;
-
-  if (
-    !data ||
-    data.type !== 'LP_SUBMIT_RESULT' ||
-    data.requestId !== currentRequestId
-  ) {
-    return;
-  }
-
-  if (submitTimeoutId) {
-    clearTimeout(submitTimeoutId);
-    submitTimeoutId = null;
-  }
-
-  document.querySelectorAll('form[style*="display: none"]').forEach(function(form) {
-    if (form.target === 'gasSubmitFrame') {
-      form.remove();
-    }
-  });
-
-  var btn = document.getElementById('submitBtn');
-  var submitError = document.getElementById('submitError');
-
-  if (data.status === 'success' || data.status === 'duplicate') {
-    showSuccess();
-    return;
-  }
-
-  btn.disabled = false;
-  btn.textContent = '希望条件を送信する';
-
-  submitError.textContent =
-    data.message || '送信できませんでした。恐れ入りますが、再度お試しください。';
-  submitError.style.display = 'block';
-
-  submitError.scrollIntoView({
-    behavior: 'smooth',
-    block: 'center'
-  });
-});
 
 function showSuccess() {
   document.getElementById('lpShell').style.display = 'none';
