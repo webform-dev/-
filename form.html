@@ -70,25 +70,26 @@ body {
   background: #fff;
 }
 
-/* 元画像上部の生成ロゴ部分を隠し、写真部分だけを表示 */
+/* 生成ロゴ部分を切り取った hero-header.png を表示 */
 .hero-inner {
   width: 100%;
   margin: 0;
   overflow: hidden;
+  background: #f2f9ff;
 }
 
 .hero-image {
   display: block;
   width: 100%;
   height: auto;
-  margin-top: -37px;
+  margin: 0;
 }
 
 .container {
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: 28px 38px 36px;
+  padding: 22px 38px 36px;
   background: #fff;
   border-radius: 0;
   border-top: 0;
@@ -104,14 +105,20 @@ body {
   box-shadow: 0 12px 34px rgba(0, 82, 204, .12);
 }
 
-/* ヘッダー下のスクロール誘導 */
+/* ヘッダー画像 → フォームの境目をぼかしつつスクロール誘導 */
 .scroll-cue {
   display: flex;
   width: 100%;
-  height: 42px;
+  height: 54px;
+  margin-top: -1px;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: linear-gradient(
+    180deg,
+    #eef8ff 0%,
+    #f5fbff 45%,
+    #ffffff 100%
+  );
   text-decoration: none;
 }
 
@@ -119,8 +126,9 @@ body {
   content: "";
   width: 15px;
   height: 15px;
-  border-right: 3px solid var(--blue);
-  border-bottom: 3px solid var(--blue);
+  margin-top: 2px;
+  border-right: 3px solid #79b7ff;
+  border-bottom: 3px solid #79b7ff;
   transform: rotate(45deg);
   animation: cueDown 1.45s ease-in-out infinite;
 }
@@ -128,10 +136,10 @@ body {
 @keyframes cueDown {
   0%, 100% {
     transform: translateY(-4px) rotate(45deg);
-    opacity: .45;
+    opacity: .42;
   }
   50% {
-    transform: translateY(5px) rotate(45deg);
+    transform: translateY(6px) rotate(45deg);
     opacity: 1;
   }
 }
@@ -691,13 +699,11 @@ var currentRequestId = '';
 var submitTimeoutId = null;
 
 // ★ 新しいGASをデプロイしたあと、ここだけ /exec URLに置き換える
-var gasUrl = 'PASTE_NEW_GAS_WEB_APP_EXEC_URL_HERE';
+var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbzhoZL-j-93rFcRGDO6Y8DrSTdk4xuHPE64WC2TgLI/dev';
 
 document.addEventListener('DOMContentLoaded', function() {
   initAgeOptions();
   initPrefOptions();
-  restoreSavedForm();
-  bindAutoSave();
   bindHomePrefSync();
 });
 
@@ -736,8 +742,6 @@ function bindHomePrefSync() {
     var desired = document.getElementById('desiredLocation');
 
     desired.value = homePref;
-    localStorage.setItem('form_data_desiredLocation', homePref);
-
     rebuildAdditionalPrefChoices(homePref);
   });
 }
@@ -780,128 +784,24 @@ function rebuildAdditionalPrefChoices(homePref) {
     prefWorkChoices.setChoiceByValue(saved);
   }
 
-  localStorage.setItem('form_data_pref_work', JSON.stringify(saved));
+
 }
 
-// 流入判別用のURLパラメータを保持
+// 流入判別用URLパラメータを、その場で読み取るだけ（端末保存なし）
 function getTrackingParams() {
   var params = new URLSearchParams(window.location.search);
-  var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_placement'];
-
-  keys.forEach(function(key) {
-    var value = params.get(key);
-    if (value) {
-      sessionStorage.setItem('tracking_' + key, value);
-    }
-  });
 
   return {
-    utm_source: params.get('utm_source') || sessionStorage.getItem('tracking_utm_source') || '',
-    utm_medium: params.get('utm_medium') || sessionStorage.getItem('tracking_utm_medium') || '',
-    utm_campaign: params.get('utm_campaign') || sessionStorage.getItem('tracking_utm_campaign') || '',
-    utm_content: params.get('utm_content') || sessionStorage.getItem('tracking_utm_content') || '',
-    utm_placement: params.get('utm_placement') || sessionStorage.getItem('tracking_utm_placement') || '',
+    utm_source: params.get('utm_source') || '',
+    utm_medium: params.get('utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || '',
+    utm_content: params.get('utm_content') || '',
+    utm_placement: params.get('utm_placement') || '',
     referrer: document.referrer || ''
   };
 }
 
-function bindAutoSave() {
-  document.querySelectorAll('#offerForm input, #offerForm select').forEach(function(el) {
-    el.addEventListener('input', autoSave);
-    el.addEventListener('change', autoSave);
-  });
-
-  document.getElementById('pref_work').addEventListener('change', function() {
-    if (prefWorkChoices) {
-      var values = prefWorkChoices.getValue(true);
-      if (!Array.isArray(values)) {
-        values = values ? [values] : [];
-      }
-      localStorage.setItem('form_data_pref_work', JSON.stringify(values));
-    }
-  });
-}
-
-function autoSave(e) {
-  var target = e.target;
-  var name = target.name;
-
-  if (!name) return;
-
-  if (name === 'conditions' || name === 'qualifications') {
-    var values = Array.from(
-      document.querySelectorAll('input[name="' + name + '"]:checked')
-    ).map(function(cb) {
-      return cb.value;
-    });
-
-    localStorage.setItem('form_data_' + name, JSON.stringify(values));
-    return;
-  }
-
-  if (target.type === 'radio') {
-    if (target.checked) {
-      localStorage.setItem('form_data_' + name, target.value);
-    }
-    return;
-  }
-
-  if (name !== 'pref_work') {
-    localStorage.setItem('form_data_' + name, target.value);
-  }
-}
-
-function restoreSavedForm() {
-  var simpleFields = ['name', 'age', 'phone', 'email', 'pref_home', 'desiredLocation'];
-
-  simpleFields.forEach(function(name) {
-    var saved = localStorage.getItem('form_data_' + name);
-    if (!saved) return;
-
-    var el = document.querySelector('[name="' + name + '"]');
-    if (el) el.value = saved;
-  });
-
-  ['experience', 'timing', 'employmentType'].forEach(function(name) {
-    var saved = localStorage.getItem('form_data_' + name);
-    if (!saved) return;
-
-    var all = document.querySelectorAll('input[name="' + name + '"]');
-    Array.from(all).forEach(function(el) {
-      if (el.value === saved) el.checked = true;
-    });
-  });
-
-  ['conditions', 'qualifications'].forEach(function(name) {
-    var saved = localStorage.getItem('form_data_' + name);
-    if (!saved) return;
-
-    try {
-      var values = JSON.parse(saved);
-      document.querySelectorAll('input[name="' + name + '"]').forEach(function(el) {
-        if (values.indexOf(el.value) !== -1) {
-          el.checked = true;
-        }
-      });
-    } catch (e) {}
-  });
-
-  var home = document.getElementById('pref_home').value;
-  rebuildAdditionalPrefChoices(home);
-
-  var savedPrefWork = localStorage.getItem('form_data_pref_work');
-  if (savedPrefWork && prefWorkChoices) {
-    try {
-      var prefValues = JSON.parse(savedPrefWork).filter(function(pref) {
-        return pref !== home;
-      });
-
-      if (prefValues.length > 0) {
-        prefWorkChoices.setChoiceByValue(prefValues);
-      }
-    } catch (e) {}
-  }
-}
+// 入力内容は/*localStorage-disabled*/ / /*sessionStorage-disabled*/へ保存しません。
 
 function validateCheckboxGroup(name, errorId, boxId) {
   var checked = document.querySelectorAll(
@@ -1090,7 +990,6 @@ window.addEventListener('message', function(event) {
   var submitError = document.getElementById('submitError');
 
   if (data.status === 'success' || data.status === 'duplicate') {
-    clearStoredForm();
     showSuccess();
     return;
   }
@@ -1107,25 +1006,6 @@ window.addEventListener('message', function(event) {
     block: 'center'
   });
 });
-
-function clearStoredForm() {
-  [
-    'conditions',
-    'qualifications',
-    'experience',
-    'timing',
-    'employmentType',
-    'name',
-    'age',
-    'phone',
-    'email',
-    'pref_home',
-    'desiredLocation',
-    'pref_work'
-  ].forEach(function(name) {
-    localStorage.removeItem('form_data_' + name);
-  });
-}
 
 function showSuccess() {
   document.getElementById('lpShell').style.display = 'none';
