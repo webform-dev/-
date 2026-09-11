@@ -862,7 +862,7 @@ var currentRequestId = '';
 var submitTimeoutId = null;
 
 // ★ 新しいGASをデプロイしたあと、ここだけ /exec URLに置き換える
-var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbwrkNuHsXmUzhrUcPZubksNnZssvtHqpdxsDOHZlPJVMsM4x4L4rWyCQLE1ExcdOhO4/exec';
+var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbx8viZyIOmAfaih3aF6_6WCbjujOCIADJPlZSClN838dDXZtqyi3Bpnb_BaEuNSSQ1f/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
   initAgeOptions();
@@ -1408,7 +1408,7 @@ function handleFormSubmit(event) {
     if (submitFinished) return;
 
     // GAS送信用iframeから返ってきたメッセージだけを処理
-    if (event.source !== submitFrame.contentWindow) return;
+   
 
     var data = event.data;
     if (!data || data.type !== 'LP_SUBMIT_RESULT') return;
