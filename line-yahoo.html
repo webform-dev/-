@@ -1526,6 +1526,10 @@ function getCheckedValue(form, name) {
 
 // LINEヤフー広告：GAS保存成功時だけコンバージョンを送信
 function fireYahooConversion(transactionId) {
+
+  console.log('Yahoo CV発火処理に入りました', transactionId);
+  console.log('ytagの状態:', typeof ytag);
+
   if (typeof ytag !== 'function') {
     console.warn('LINEヤフー広告の計測タグを読み込めなかったため、CV送信をスキップしました。');
     return;
@@ -1540,6 +1544,8 @@ function fireYahooConversion(transactionId) {
       "yahoo_ydn_conv_value": "0"
     }
   });
+
+  console.log('Yahoo CVタグを実行しました');
 }
 
 function showSuccess() {
