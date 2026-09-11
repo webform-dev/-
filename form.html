@@ -715,11 +715,11 @@ input[type="checkbox"] {
             autocomplete="tel"
             placeholder="例：09012345678"
             maxlength="11"
-            pattern="^0\d{9,10}$"
-            title="ハイフンなしの10〜11桁で入力してください"
+            pattern="(?:0[1-9][0-9]{8}|(?:050|070|080|090)[0-9]{8})"
+            title="有効な日本の電話番号をハイフンなしで入力してください"
             required
           >
-          <div class="field-error" id="phone-error">※電話番号を入力してください</div>
+          <div class="field-error" id="phone-error">※正しい電話番号を入力してください</div>
         </div>
 
         <div class="form-group">
@@ -854,7 +854,7 @@ var currentRequestId = '';
 var submitTimeoutId = null;
 
 // ★ 新しいGASをデプロイしたあと、ここだけ /exec URLに置き換える
-var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbyxrUkSoS0rU91vGFyXjfuLZ9_6Y_KoAy6ZnY3DDIhXiTdYQcuVTU3WtidbHK6Ranxx/exec';
+var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbz785hLA9cxkM7gz6ZjUg9VHm0X6uMwmC2k-WmJE-zfxZQsJ85mrJ91A98ALd3qgkI/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
   initAgeOptions();
@@ -1031,12 +1031,62 @@ function setRadioGroupError(name, errorId) {
   return valid;
 }
 
+function normalizePhoneNumber(value) {
+  return String(value || '')
+    .replace(/[０-９]/g, function(char) {
+      return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
+    })
+    .replace(/[^\d]/g, '');
+}
+
+function isPlausibleJapanesePhone(value) {
+  var phone = normalizePhoneNumber(value);
+
+  // 固定電話・フリーダイヤル等：10桁 / 携帯・IP電話：11桁
+  var formatOk =
+    /^0[1-9]\d{8}$/.test(phone) ||
+    /^(050|070|080|090)\d{8}$/.test(phone);
+
+  if (!formatOk) return false;
+
+  // 000... のように同じ数字だけの番号を除外
+  if (/^(\d)\1+$/.test(phone)) return false;
+
+  // 090-0000-0000 / 080-1111-1111 など明らかなダミーを除外
+  if (/^(050|070|080|090)(\d)\2{7}$/.test(phone)) return false;
+
+  return true;
+}
+
+function validatePhoneField() {
+  var field = document.getElementById('phone');
+  var error = document.getElementById('phone-error');
+  var normalized = normalizePhoneNumber(field.value);
+
+  // 入力されている場合は整形した数字を表示値にも反映
+  if (field.value) {
+    field.value = normalized;
+  }
+
+  var valid = isPlausibleJapanesePhone(normalized);
+
+  if (!valid) {
+    field.setCustomValidity('正しい電話番号を入力してください');
+    if (error) error.classList.add('show');
+  } else {
+    field.setCustomValidity('');
+    if (error) error.classList.remove('show');
+  }
+
+  return valid;
+}
+
 function validateVisibleFields() {
   var ok = true;
 
   ok = setFieldError('name', 'name-error') && ok;
   ok = setFieldError('age', 'age-error') && ok;
-  ok = setFieldError('phone', 'phone-error') && ok;
+  ok = validatePhoneField() && ok;
   ok = setFieldError('pref_home', 'pref_home-error') && ok;
   ok = setFieldError('desiredLocation', 'desiredLocation-error') && ok;
 
@@ -1053,6 +1103,15 @@ function clearErrorOnInput() {
   form.addEventListener('input', function(event) {
     var target = event.target;
 
+    if (target.name === 'phone') {
+      // 入力中は、十分な桁数になった時点で正当性を再チェック
+      var phone = normalizePhoneNumber(target.value);
+      if (phone.length >= 10) {
+        validatePhoneField();
+      }
+      return;
+    }
+
     if (target.name) {
       var directError = document.getElementById(target.name + '-error');
       if (directError && target.checkValidity()) {
@@ -1066,6 +1125,8 @@ function clearErrorOnInput() {
 
     if (target.type === 'radio') {
       setRadioGroupError(target.name, target.name + '-error');
+    } else if (target.name === 'phone') {
+      validatePhoneField();
     } else if (target.name) {
       var directError = document.getElementById(target.name + '-error');
       if (directError && target.checkValidity()) {
@@ -1129,22 +1190,18 @@ function handleFormSubmit(event) {
     return;
   }
 
-  var phone = form.elements['phone'].value
-    .replace(/[０-９]/g, function(char) {
-      return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
-    })
-    .replace(/[^\d]/g, '');
-
+  var phone = normalizePhoneNumber(form.elements['phone'].value);
   form.elements['phone'].value = phone;
 
-  if (!/^0\d{9,10}$/.test(phone)) {
-    form.elements['phone'].setCustomValidity(
-      'ハイフンなしの10〜11桁で入力してください'
-    );
-    form.reportValidity();
-    form.elements['phone'].setCustomValidity('');
+  if (!isPlausibleJapanesePhone(phone)) {
+    form.elements['phone'].setCustomValidity('正しい電話番号を入力してください');
+    document.getElementById('phone-error').classList.add('show');
+    form.elements['phone'].focus();
     return;
   }
+
+  form.elements['phone'].setCustomValidity('');
+  document.getElementById('phone-error').classList.remove('show');
 
   var conditions = Array.from(
     form.querySelectorAll('input[name="conditions"]:checked')
