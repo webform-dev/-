@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>クロスワーク｜現場職向け転職サービス</title>
+
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+
+<style>
+:root {
+  --blue: #0877f9;
+  --blue-dark: #0054b8;
+  --blue-soft: #eef7ff;
+  --blue-field: #f7fbff;
+  --text: #17324d;
+  --subtext: #536b82;
+  --danger: #dc2626;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--blue-soft);
+}
+
+.hero {
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #dcecff;
+}
+
+.hero-inner {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.container {
+  width: calc(100% - 24px);
+  max-width: 800px;
+  margin: 22px auto 32px;
+  padding: 32px 38px;
+  background: #fff;
+  border-radius: 14px;
+  border-top: 5px solid var(--blue);
+  box-shadow: 0 10px 30px rgba(0, 82, 204, .10);
+}
+
+.form-heading {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.form-heading h1 {
+  margin: 0 0 8px;
+  font-size: 21px;
+  line-height: 1.45;
+}
+
+.form-heading p {
+  margin: 0;
+  color: var(--subtext);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.form-group { margin-bottom: 30px; }
+
+.question-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.question-number {
+  display: inline-flex;
+  width: 27px;
+  height: 27px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 27px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--blue);
+  font-size: 12px;
+}
+
+.optional {
+  color: #7890a8;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.helper-text {
+  margin: -3px 0 10px;
+  color: #678097;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #bad3ec;
+  border-radius: 8px;
+  background: var(--blue-field);
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  transition: border-color .2s, background-color .2s, box-shadow .2s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(8, 119, 249, .10);
+}
+
+input[readonly] {
+  background: #edf5fc;
+  color: #40566d;
+  cursor: not-allowed;
+}
+
+.radio-grid,
+.check-grid-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.radio-label,
+.check-grid-inner label {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid #c9def2;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .2s, background-color .2s;
+}
+
+.radio-label:hover,
+.check-grid-inner label:hover {
+  border-color: var(--blue);
+  background: #f7fbff;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  flex: 0 0 auto;
+  margin: 0 9px 0 0;
+  accent-color: var(--blue);
+  transform: scale(1.12);
+}
+
+.scroll-box {
+  max-height: 230px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid #c9def2;
+  border-radius: 8px;
+  background: #f9fcff;
+}
+
+.validation-error {
+  display: none;
+  margin-top: 7px;
+  color: var(--danger);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.error-box {
+  border-color: var(--danger) !important;
+  background: #fff8f8 !important;
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  max-width: 390px;
+  margin: 34px auto 6px;
+  padding: 16px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(8, 119, 249, .28);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+
+.submit-btn:disabled {
+  background: #a9b8c7;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.submit-note {
+  margin: 10px auto 0;
+  text-align: center;
+  color: #7a8fa4;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.choices { margin-bottom: 0; }
+
+.choices__inner {
+  min-height: 48px;
+  padding: 5px 8px;
+  border: 1px solid #bad3ec;
+  border-radius: 8px;
+  background: var(--blue-field);
+  font-size: 14px;
+}
+
+.choices.is-focused .choices__inner {
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(8, 119, 249, .10);
+}
+
+.choices__list--multiple .choices__item {
+  border: 1px solid #bfd8f3;
+  border-radius: 5px;
+  background: #e9f4ff;
+  color: #184c7d;
+  font-size: 12px;
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+  z-index: 30;
+}
+
+#successMessage {
+  display: none;
+  text-align: center;
+  padding-top: 46px;
+  padding-bottom: 46px;
+}
+
+.success-check {
+  display: flex;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e5f3ff;
+  color: var(--blue);
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.success-title {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.success-desc {
+  margin: 0;
+  color: var(--subtext);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+#submitError {
+  display: none;
+  max-width: 620px;
+  margin: 0 auto 20px;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fff7f7;
+  color: #b91c1c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.site-footer {
+  padding: 28px 16px 34px;
+  border-top: 1px solid #dbeafb;
+  background: rgba(255,255,255,.72);
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 18px;
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: #326a9d;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.footer-copy {
+  color: #91a3b5;
+  font-size: 11px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    width: calc(100% - 18px);
+    margin-top: 14px;
+    padding: 24px 16px 28px;
+    border-radius: 11px;
+  }
+
+  .form-heading h1 { font-size: 18px; }
+
+  .radio-grid,
+  .check-grid-inner {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="hero" id="mainHeader">
+  <div class="hero-inner">
+    <img
+      src="hero-header.png"
+      alt="クロスワーク 現場職向け転職サービス"
+      class="hero-image"
+    >
+  </div>
+</header>
+
+<main>
+  <div class="container" id="formContainer">
+    <div class="form-heading">
+      <h1>まずはご希望の条件を教えてください</h1>
+      <p>ご入力内容をもとに、業界特化のエージェントが求人探しから転職活動まで無料でサポートします。</p>
+    </div>
+
+    <div id="submitError"></div>
+
+    <form id="offerForm" novalidate onsubmit="handleFormSubmit(event)">
+
+      <div class="form-group">
+        <div class="question-label">
+          <span class="question-number">1</span>
+          <span>転職で重視したいポイント <span class="optional">（複数選択可）</span></span>
+        </div>
+        <div class="check-grid-inner">
+          <label><input type="checkbox" name="conditions" value="残業少なめ">残業少なめ</label>
+          <label><input type="checkbox" name="conditions" value="土日祝休み">土日祝休み</label>
+          <label><input type="checkbox" name="conditions" value="今より給与・年収を上げたい">今より給与・年収を上げたい</label>
+          <label><input type="checkbox" name="conditions" value="人間関係が良い職場">人間関係が良い職場</label>
+          <label><input type="checkbox" name="conditions" value="未経験・ブランク歓迎">未経験・ブランク歓迎</label>
+          <label><input type="checkbox" name="conditions" value="転勤なし / 地元で働きたい">転勤なし / 地元で働きたい</label>
+          <label><input type="checkbox" name="conditions" value="その他・福利厚生重視">その他・福利厚生重視</label>
+        </div>
+        <div id="conditions-error" class="validation-error">※1つ以上選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label">
+          <span class="question-number">2</span>
+          <span>保有資格</span>
+        </div>
+        <p class="helper-text">該当する資格をすべてお選びください。「資格無し」も選択できます。</p>
+        <div class="scroll-box" id="qualificationsBox">
+          <div class="check-grid-inner">
+            <label><input type="checkbox" name="qualifications" value="1級建築施工管理技士">1級建築施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級建築施工管理技士">2級建築施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級建築施工管理技士補">1級建築施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="2級建築施工管理技士補">2級建築施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="1級土木施工管理技士">1級土木施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級土木施工管理技士">2級土木施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級土木施工管理技士補">1級土木施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="2級土木施工管理技士補">2級土木施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="1級管工事施工管理技士">1級管工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級管工事施工管理技士">2級管工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級管工事施工管理技士補">1級管工事施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="2級管工事施工管理技士補">2級管工事施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="1級電気工事施工管理技士">1級電気工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級電気工事施工管理技士">2級電気工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級電気工事施工管理技士補">1級電気工事施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="2級電気工事施工管理技士補">2級電気工事施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="1級建築士">1級建築士</label>
+            <label><input type="checkbox" name="qualifications" value="2級建築士">2級建築士</label>
+            <label><input type="checkbox" name="qualifications" value="1級造園施工管理技士">1級造園施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級造園施工管理技士">2級造園施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級電気通信工事施工管理技士">1級電気通信工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級電気通信工事施工管理技士">2級電気通信工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="第一種電気主任技術者">第一種電気主任技術者</label>
+            <label><input type="checkbox" name="qualifications" value="第二種電気主任技術者">第二種電気主任技術者</label>
+            <label><input type="checkbox" name="qualifications" value="第三種電気主任技術者">第三種電気主任技術者</label>
+            <label><input type="checkbox" name="qualifications" value="第一種電気工事士">第一種電気工事士</label>
+            <label><input type="checkbox" name="qualifications" value="第二種電気工事士">第二種電気工事士</label>
+            <label><input type="checkbox" name="qualifications" value="技術士">技術士</label>
+            <label><input type="checkbox" name="qualifications" value="技術士補">技術士補</label>
+            <label><input type="checkbox" name="qualifications" value="RCCM">RCCM</label>
+            <label><input type="checkbox" name="qualifications" value="測量士">測量士</label>
+            <label><input type="checkbox" name="qualifications" value="測量士補">測量士補</label>
+            <label><input type="checkbox" name="qualifications" value="運転免許">運転免許</label>
+            <label><input type="checkbox" name="qualifications" value="大型免許">大型免許</label>
+            <label><input type="checkbox" name="qualifications" value="中型免許">中型免許</label>
+            <label><input type="checkbox" name="qualifications" value="資格無し">資格無し</label>
+            <label><input type="checkbox" name="qualifications" value="その他">その他</label>
+          </div>
+        </div>
+        <div id="qual-error" class="validation-error">※1つ以上選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label"><span class="question-number">3</span><span>経験</span></div>
+        <div class="radio-grid">
+          <label class="radio-label"><input type="radio" name="experience" value="施工管理経験がある" required>施工管理経験がある</label>
+          <label class="radio-label"><input type="radio" name="experience" value="設計経験がある">設計経験がある</label>
+          <label class="radio-label"><input type="radio" name="experience" value="工事作業経験がある">工事作業経験がある</label>
+          <label class="radio-label"><input type="radio" name="experience" value="設備管理経験がある">設備管理経験がある</label>
+          <label class="radio-label"><input type="radio" name="experience" value="いずれの経験もない">いずれの経験もない</label>
+          <label class="radio-label"><input type="radio" name="experience" value="その他">その他</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label"><span class="question-number">4</span><span>ご希望の転職時期</span></div>
+        <div class="radio-grid">
+          <label class="radio-label"><input type="radio" name="timing" value="すぐにでも" required>すぐにでも</label>
+          <label class="radio-label"><input type="radio" name="timing" value="1ヶ月以内">1ヶ月以内</label>
+          <label class="radio-label"><input type="radio" name="timing" value="3ヶ月以内">3ヶ月以内</label>
+          <label class="radio-label"><input type="radio" name="timing" value="半年以内">半年以内</label>
+          <label class="radio-label"><input type="radio" name="timing" value="1年以内">1年以内</label>
+          <label class="radio-label"><input type="radio" name="timing" value="未定">未定</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label"><span class="question-number">5</span><span>ご希望の雇用形態</span></div>
+        <div class="radio-grid">
+          <label class="radio-label"><input type="radio" name="employmentType" value="正社員" required>正社員</label>
+          <label class="radio-label"><input type="radio" name="employmentType" value="業務委託">業務委託</label>
+          <label class="radio-label"><input type="radio" name="employmentType" value="アルバイト">アルバイト</label>
+          <label class="radio-label"><input type="radio" name="employmentType" value="その他">その他</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label"><span class="question-number">6</span><span>名前（フルネーム）</span></div>
+        <input type="text" name="name" autocomplete="name" placeholder="例：山田 太郎" maxlength="50" required>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label"><span class="question-number">7</span><span>ご年齢</span></div>
+        <select name="age" id="age" required>
+          <option value="">選択してください</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label"><span class="question-number">8</span><span>電話番号</span></div>
+        <input
+          type="tel"
+          name="phone"
+          id="phone"
+          inputmode="numeric"
+          autocomplete="tel"
+          placeholder="例：09012345678"
+          maxlength="11"
+          pattern="^0\d{9,10}$"
+          title="ハイフンなしの10〜11桁で入力してください"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <div class="question-label">
+          <span class="question-number">9</span>
+          <span>メールアドレス <span class="optional">（任意）</span></span>
+        </div>
+        <input type="email" name="email" id="email" autocomplete="email" placeholder="例：sample@example.com">
+      </div>
+
+      <div class="form-group">
+        <div class="question-label"><span class="question-number">10</span><span>お住まい</span></div>
+        <select id="pref_home" name="pref_home" required>
+          <option value="">都道府県を選択してください</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label"><span class="question-number">11</span><span>希望勤務地</span></div>
+        <p class="helper-text">お住まいを選択すると自動で反映されます。</p>
+        <input
+          type="text"
+          id="desiredLocation"
+          name="desiredLocation"
+          placeholder="お住まいから自動で反映"
+          readonly
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <div class="question-label">
+          <span class="question-number">12</span>
+          <span>お住まい以外をご希望の場合は選択 <span class="optional">（任意・複数選択可）</span></span>
+        </div>
+        <select id="pref_work" name="pref_work" multiple></select>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">無料で求人をチェックする</button>
+      <p class="submit-note">送信後、担当者よりご連絡させていただきます。</p>
+    </form>
+  </div>
+
+  <div class="container" id="successMessage">
+    <div class="success-check">✓</div>
+    <h2 class="success-title">ご回答の受付が完了しました！</h2>
+    <p class="success-desc">
+      ご回答ありがとうございます。<br>
+      内容を確認のうえ、担当者よりご連絡させていただきます。
+    </p>
+  </div>
+</main>
+
+<footer class="site-footer" id="mainFooter">
+  <div class="footer-links">
+    <a href="https://www.xmile.co.jp/policy/01" target="_blank" rel="noopener">個人情報保護方針</a>
+    <a href="https://www.xmile.co.jp/company" target="_blank" rel="noopener">運営会社情報</a>
+    <a href="https://www.xmile.co.jp/rule" target="_blank" rel="noopener">利用規約</a>
+    <a href="https://x-work.jp/posting-policy" target="_blank" rel="noopener">掲載規定</a>
+  </div>
+  <div class="footer-copy">&copy; X Mile Inc. All rights reserved.</div>
+</footer>
+
+<iframe name="gasSubmitFrame" id="gasSubmitFrame" style="display:none;"></iframe>
+
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<script>
+var prefs = [
+  "北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県",
+  "茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県",
+  "新潟県","富山県","石川県","福井県","山梨県","長野県",
+  "岐阜県","静岡県","愛知県","三重県",
+  "滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県",
+  "鳥取県","島根県","岡山県","広島県","山口県",
+  "徳島県","香川県","愛媛県","高知県",
+  "福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"
+];
+
+var prefWorkChoices = null;
+var currentRequestId = '';
+var submitTimeoutId = null;
+
+// ★ 新しいGASをデプロイしたあと、ここだけ /exec URLに置き換える
+var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbzhoZL-j-93rFcRGDO6Y8DrSTdk4xuHPE64WC2TgLI/dev';
+
+document.addEventListener('DOMContentLoaded', function() {
+  initAgeOptions();
+  initPrefOptions();
+  restoreSavedForm();
+  bindAutoSave();
+  bindHomePrefSync();
+});
+
+function initAgeOptions() {
+  var ageSelect = document.getElementById('age');
+
+  for (var age = 15; age <= 80; age++) {
+    ageSelect.appendChild(new Option(age + '歳', String(age)));
+  }
+}
+
+function initPrefOptions() {
+  var prefHome = document.getElementById('pref_home');
+  var prefWork = document.getElementById('pref_work');
+
+  prefs.forEach(function(pref) {
+    prefHome.appendChild(new Option(pref, pref));
+    prefWork.appendChild(new Option(pref, pref));
+  });
+
+  prefWorkChoices = new Choices(prefWork, {
+    removeItemButton: true,
+    searchEnabled: true,
+    placeholder: true,
+    placeholderValue: '都道府県を選択',
+    itemSelectText: '',
+    noChoicesText: '選択肢がありません',
+    noResultsText: '見つかりませんでした',
+    shouldSort: false
+  });
+}
+
+function bindHomePrefSync() {
+  document.getElementById('pref_home').addEventListener('change', function() {
+    var homePref = this.value;
+    var desired = document.getElementById('desiredLocation');
+
+    desired.value = homePref;
+    localStorage.setItem('form_data_desiredLocation', homePref);
+
+    rebuildAdditionalPrefChoices(homePref);
+  });
+}
+
+function rebuildAdditionalPrefChoices(homePref) {
+  var saved = [];
+
+  if (prefWorkChoices) {
+    var current = prefWorkChoices.getValue(true);
+    if (!Array.isArray(current)) {
+      current = current ? [current] : [];
+    }
+    saved = current.filter(function(pref) {
+      return pref !== homePref;
+    });
+    prefWorkChoices.destroy();
+  }
+
+  var prefWork = document.getElementById('pref_work');
+  prefWork.innerHTML = '';
+
+  prefs.forEach(function(pref) {
+    if (pref !== homePref) {
+      prefWork.appendChild(new Option(pref, pref));
+    }
+  });
+
+  prefWorkChoices = new Choices(prefWork, {
+    removeItemButton: true,
+    searchEnabled: true,
+    placeholder: true,
+    placeholderValue: '都道府県を選択',
+    itemSelectText: '',
+    noChoicesText: '選択肢がありません',
+    noResultsText: '見つかりませんでした',
+    shouldSort: false
+  });
+
+  if (saved.length > 0) {
+    prefWorkChoices.setChoiceByValue(saved);
+  }
+
+  localStorage.setItem('form_data_pref_work', JSON.stringify(saved));
+}
+
+// 流入判別用のURLパラメータを保持
+function getTrackingParams() {
+  var params = new URLSearchParams(window.location.search);
+  var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_placement'];
+
+  keys.forEach(function(key) {
+    var value = params.get(key);
+    if (value) {
+      sessionStorage.setItem('tracking_' + key, value);
+    }
+  });
+
+  return {
+    utm_source: params.get('utm_source') || sessionStorage.getItem('tracking_utm_source') || '',
+    utm_medium: params.get('utm_medium') || sessionStorage.getItem('tracking_utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || sessionStorage.getItem('tracking_utm_campaign') || '',
+    utm_content: params.get('utm_content') || sessionStorage.getItem('tracking_utm_content') || '',
+    utm_placement: params.get('utm_placement') || sessionStorage.getItem('tracking_utm_placement') || '',
+    referrer: document.referrer || ''
+  };
+}
+
+function bindAutoSave() {
+  document.querySelectorAll('#offerForm input, #offerForm select').forEach(function(el) {
+    el.addEventListener('input', autoSave);
+    el.addEventListener('change', autoSave);
+  });
+
+  document.getElementById('pref_work').addEventListener('change', function() {
+    if (prefWorkChoices) {
+      var values = prefWorkChoices.getValue(true);
+      if (!Array.isArray(values)) {
+        values = values ? [values] : [];
+      }
+      localStorage.setItem('form_data_pref_work', JSON.stringify(values));
+    }
+  });
+}
+
+function autoSave(e) {
+  var target = e.target;
+  var name = target.name;
+
+  if (!name) return;
+
+  if (name === 'conditions' || name === 'qualifications') {
+    var values = Array.from(
+      document.querySelectorAll('input[name="' + name + '"]:checked')
+    ).map(function(cb) {
+      return cb.value;
+    });
+
+    localStorage.setItem('form_data_' + name, JSON.stringify(values));
+    return;
+  }
+
+  if (target.type === 'radio') {
+    if (target.checked) {
+      localStorage.setItem('form_data_' + name, target.value);
+    }
+    return;
+  }
+
+  if (name !== 'pref_work') {
+    localStorage.setItem('form_data_' + name, target.value);
+  }
+}
+
+function restoreSavedForm() {
+  var simpleFields = ['name', 'age', 'phone', 'email', 'pref_home', 'desiredLocation'];
+
+  simpleFields.forEach(function(name) {
+    var saved = localStorage.getItem('form_data_' + name);
+    if (!saved) return;
+
+    var el = document.querySelector('[name="' + name + '"]');
+    if (el) el.value = saved;
+  });
+
+  ['experience', 'timing', 'employmentType'].forEach(function(name) {
+    var saved = localStorage.getItem('form_data_' + name);
+    if (!saved) return;
+
+    var all = document.querySelectorAll('input[name="' + name + '"]');
+    Array.from(all).forEach(function(el) {
+      if (el.value === saved) el.checked = true;
+    });
+  });
+
+  ['conditions', 'qualifications'].forEach(function(name) {
+    var saved = localStorage.getItem('form_data_' + name);
+    if (!saved) return;
+
+    try {
+      var values = JSON.parse(saved);
+      document.querySelectorAll('input[name="' + name + '"]').forEach(function(el) {
+        if (values.indexOf(el.value) !== -1) {
+          el.checked = true;
+        }
+      });
+    } catch (e) {}
+  });
+
+  var home = document.getElementById('pref_home').value;
+  rebuildAdditionalPrefChoices(home);
+
+  var savedPrefWork = localStorage.getItem('form_data_pref_work');
+  if (savedPrefWork && prefWorkChoices) {
+    try {
+      var prefValues = JSON.parse(savedPrefWork).filter(function(pref) {
+        return pref !== home;
+      });
+
+      if (prefValues.length > 0) {
+        prefWorkChoices.setChoiceByValue(prefValues);
+      }
+    } catch (e) {}
+  }
+}
+
+function validateCheckboxGroup(name, errorId, boxId) {
+  var checked = document.querySelectorAll(
+    'input[name="' + name + '"]:checked'
+  ).length > 0;
+
+  var error = document.getElementById(errorId);
+  error.style.display = checked ? 'none' : 'block';
+
+  if (boxId) {
+    var box = document.getElementById(boxId);
+    box.classList.toggle('error-box', !checked);
+  }
+
+  return checked;
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+
+  var form = document.getElementById('offerForm');
+  var submitError = document.getElementById('submitError');
+  submitError.style.display = 'none';
+  submitError.textContent = '';
+
+  var conditionsValid = validateCheckboxGroup(
+    'conditions',
+    'conditions-error'
+  );
+
+  var qualificationsValid = validateCheckboxGroup(
+    'qualifications',
+    'qual-error',
+    'qualificationsBox'
+  );
+
+  if (!form.checkValidity() || !conditionsValid || !qualificationsValid) {
+    if (!conditionsValid) {
+      document.getElementById('conditions-error').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    } else if (!qualificationsValid) {
+      document.getElementById('qualificationsBox').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    } else {
+      form.reportValidity();
+    }
+    return;
+  }
+
+  var phone = form.elements['phone'].value
+    .replace(/[０-９]/g, function(char) {
+      return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
+    })
+    .replace(/[^\d]/g, '');
+
+  form.elements['phone'].value = phone;
+
+  if (!/^0\d{9,10}$/.test(phone)) {
+    form.elements['phone'].setCustomValidity(
+      'ハイフンなしの10〜11桁で入力してください'
+    );
+    form.reportValidity();
+    form.elements['phone'].setCustomValidity('');
+    return;
+  }
+
+  var conditions = Array.from(
+    form.querySelectorAll('input[name="conditions"]:checked')
+  ).map(function(cb) {
+    return cb.value;
+  });
+
+  var qualifications = Array.from(
+    form.querySelectorAll('input[name="qualifications"]:checked')
+  ).map(function(cb) {
+    return cb.value;
+  });
+
+  var prefWorkValues = [];
+  if (prefWorkChoices) {
+    prefWorkValues = prefWorkChoices.getValue(true);
+  }
+  if (!Array.isArray(prefWorkValues)) {
+    prefWorkValues = prefWorkValues ? [prefWorkValues] : [];
+  }
+
+  var tracking = getTrackingParams();
+
+  currentRequestId =
+    Date.now().toString(36) +
+    Math.random().toString(36).slice(2, 10);
+
+  var payload = {
+    request_id: currentRequestId,
+    conditions: conditions.join('、'),
+    qualifications: qualifications.join('、'),
+    experience: getCheckedValue(form, 'experience'),
+    timing: getCheckedValue(form, 'timing'),
+    employmentType: getCheckedValue(form, 'employmentType'),
+    name: form.elements['name'].value.trim(),
+    age: form.elements['age'].value,
+    phone: phone,
+    email: form.elements['email'].value.trim(),
+    pref_home: form.elements['pref_home'].value,
+    desiredLocation: form.elements['desiredLocation'].value,
+    pref_work: prefWorkValues.join('、'),
+    utm_source: tracking.utm_source,
+    utm_medium: tracking.utm_medium,
+    utm_campaign: tracking.utm_campaign,
+    utm_content: tracking.utm_content,
+    utm_placement: tracking.utm_placement,
+    referrer: tracking.referrer
+  };
+
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+
+  var hiddenForm = document.createElement('form');
+  hiddenForm.method = 'POST';
+  hiddenForm.action = gasUrl;
+  hiddenForm.target = 'gasSubmitFrame';
+  hiddenForm.style.display = 'none';
+
+  Object.keys(payload).forEach(function(key) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = payload[key];
+    hiddenForm.appendChild(input);
+  });
+
+  document.body.appendChild(hiddenForm);
+  hiddenForm.submit();
+
+  submitTimeoutId = window.setTimeout(function() {
+    hiddenForm.remove();
+    btn.disabled = false;
+    btn.textContent = '無料で求人をチェックする';
+
+    submitError.textContent =
+      '通信に時間がかかっています。恐れ入りますが、通信環境をご確認のうえ再度お試しください。';
+    submitError.style.display = 'block';
+
+    submitError.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  }, 12000);
+}
+
+function getCheckedValue(form, name) {
+  var checked = form.querySelector(
+    'input[name="' + name + '"]:checked'
+  );
+  return checked ? checked.value : '';
+}
+
+window.addEventListener('message', function(event) {
+  var data = event.data;
+
+  if (
+    !data ||
+    data.type !== 'LP_SUBMIT_RESULT' ||
+    data.requestId !== currentRequestId
+  ) {
+    return;
+  }
+
+  if (submitTimeoutId) {
+    clearTimeout(submitTimeoutId);
+    submitTimeoutId = null;
+  }
+
+  document.querySelectorAll('form[style*="display: none"]').forEach(function(form) {
+    if (form.target === 'gasSubmitFrame') {
+      form.remove();
+    }
+  });
+
+  var btn = document.getElementById('submitBtn');
+  var submitError = document.getElementById('submitError');
+
+  if (data.status === 'success' || data.status === 'duplicate') {
+    clearStoredForm();
+    showSuccess();
+    return;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '無料で求人をチェックする';
+
+  submitError.textContent =
+    data.message || '送信できませんでした。恐れ入りますが、再度お試しください。';
+  submitError.style.display = 'block';
+
+  submitError.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
+});
+
+function clearStoredForm() {
+  [
+    'conditions',
+    'qualifications',
+    'experience',
+    'timing',
+    'employmentType',
+    'name',
+    'age',
+    'phone',
+    'email',
+    'pref_home',
+    'desiredLocation',
+    'pref_work'
+  ].forEach(function(name) {
+    localStorage.removeItem('form_data_' + name);
+  });
+}
+
+function showSuccess() {
+  document.getElementById('mainHeader').style.display = 'none';
+  document.getElementById('mainFooter').style.display = 'none';
+  document.getElementById('formContainer').style.display = 'none';
+  document.getElementById('successMessage').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
