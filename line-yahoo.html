@@ -862,7 +862,7 @@ var currentRequestId = '';
 var submitTimeoutId = null;
 
 // ★ 新しいGASをデプロイしたあと、ここだけ /exec URLに置き換える
-var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbx8viZyIOmAfaih3aF6_6WCbjujOCIADJPlZSClN838dDXZtqyi3Bpnb_BaEuNSSQ1f/exec';
+var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbz_60biXc0FGM7DOHDO_EWdoM47hVHbOl24d2jAa6Hl9VW1fs5qhrN-jDvqk1nlDXXU/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
   initAgeOptions();
@@ -1371,85 +1371,150 @@ function handleFormSubmit(event) {
 
   document.body.appendChild(hiddenForm);
 
-  var submitFrame = document.getElementById('gasSubmitFrame');
-  var submitFinished = false;
+var submitFinished = false;
+var statusPollTimer = null;
+var statusScript = null;
 
-  function cleanupSubmission() {
-    if (submitTimeoutId) {
-      clearTimeout(submitTimeoutId);
-      submitTimeoutId = null;
-    }
-
-    window.removeEventListener('message', handleSubmitMessage);
-
-    if (hiddenForm && hiddenForm.parentNode) {
-      hiddenForm.remove();
-    }
+function cleanupSubmission() {
+  if (submitTimeoutId) {
+    clearTimeout(submitTimeoutId);
+    submitTimeoutId = null;
   }
 
-  function restoreSubmitButton() {
-    btn.disabled = false;
-    btn.textContent = '希望条件を送信する';
+  if (statusPollTimer) {
+    clearTimeout(statusPollTimer);
+    statusPollTimer = null;
   }
 
-  function showSubmitError(message) {
-    restoreSubmitButton();
-    submitError.textContent = message ||
-      '送信に失敗しました。恐れ入りますが、時間をおいて再度お試しください。';
-    submitError.style.display = 'block';
-
-    submitError.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    });
+  if (statusScript && statusScript.parentNode) {
+    statusScript.remove();
+    statusScript = null;
   }
 
-  function handleSubmitMessage(event) {
-    if (submitFinished) return;
+  if (hiddenForm && hiddenForm.parentNode) {
+    hiddenForm.remove();
+  }
 
-    // GAS送信用iframeから返ってきたメッセージだけを処理
-   
+  try {
+    delete window.lpSubmitStatusCallback;
+  } catch (e) {
+    window.lpSubmitStatusCallback = undefined;
+  }
+}
 
-    var data = event.data;
-    if (!data || data.type !== 'LP_SUBMIT_RESULT') return;
-    if (data.requestId !== currentRequestId) return;
+function restoreSubmitButton() {
+  btn.disabled = false;
+  btn.textContent = '希望条件を送信する';
+}
 
-    submitFinished = true;
-    cleanupSubmission();
+function showSubmitError(message) {
+  restoreSubmitButton();
 
-    if (data.status === 'success') {
-      // スプレッドシート保存成功時だけLINEヤフー広告のCVを発火
-      fireYahooConversion(currentRequestId);
-      showSuccess();
-      return;
-    }
+  submitError.textContent =
+    message ||
+    '送信に失敗しました。恐れ入りますが、時間をおいて再度お試しください。';
 
-    if (data.status === 'duplicate') {
-      showSubmitError(
-        data.message || 'すでに同じ電話番号で回答を受け付けています。'
-      );
-      return;
-    }
+  submitError.style.display = 'block';
 
+  submitError.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
+}
+
+function scheduleStatusCheck(delay) {
+  if (submitFinished) return;
+
+  statusPollTimer = window.setTimeout(
+    checkSubmitStatus,
+    delay || 700
+  );
+}
+
+function checkSubmitStatus() {
+  if (submitFinished) return;
+
+  if (statusScript && statusScript.parentNode) {
+    statusScript.remove();
+  }
+
+  statusScript = document.createElement('script');
+
+  statusScript.src =
+    gasUrl +
+    '?mode=status' +
+    '&request_id=' + encodeURIComponent(currentRequestId) +
+    '&callback=lpSubmitStatusCallback' +
+    '&_=' + Date.now();
+
+  statusScript.onerror = function() {
+    scheduleStatusCheck(800);
+  };
+
+  document.body.appendChild(statusScript);
+}
+
+window.lpSubmitStatusCallback = function(data) {
+  if (submitFinished) return;
+
+  if (!data || data.requestId !== currentRequestId) {
+    scheduleStatusCheck(700);
+    return;
+  }
+
+  // GAS処理がまだ終わっていない
+  if (data.status === 'pending') {
+    scheduleStatusCheck(700);
+    return;
+  }
+
+  submitFinished = true;
+
+  var resultStatus = data.status;
+  var resultMessage = data.message;
+
+  cleanupSubmission();
+
+  if (resultStatus === 'success') {
+    // SSへの保存成功時だけLINEヤフー広告CV発火
+    fireYahooConversion(currentRequestId);
+
+    // サンクス画面表示
+    showSuccess();
+    return;
+  }
+
+  if (resultStatus === 'duplicate') {
     showSubmitError(
-      data.message || '送信に失敗しました。恐れ入りますが、時間をおいて再度お試しください。'
+      resultMessage ||
+      'すでに同じ電話番号で回答を受け付けています。'
     );
+    return;
   }
 
-  window.addEventListener('message', handleSubmitMessage);
+  showSubmitError(
+    resultMessage ||
+    '送信に失敗しました。恐れ入りますが、時間をおいて再度お試しください。'
+  );
+};
 
-  hiddenForm.submit();
+// GASへフォーム送信
+hiddenForm.submit();
 
-  submitTimeoutId = window.setTimeout(function() {
-    if (submitFinished) return;
+// 0.6秒後から結果確認開始
+scheduleStatusCheck(600);
 
-    submitFinished = true;
-    cleanupSubmission();
+// 20秒経っても結果が取れなければエラー
+submitTimeoutId = window.setTimeout(function() {
+  if (submitFinished) return;
 
-    showSubmitError(
-      '通信に時間がかかっています。恐れ入りますが、通信環境をご確認のうえ再度お試しください。'
-    );
-  }, 12000);
+  submitFinished = true;
+  cleanupSubmission();
+
+  showSubmitError(
+    '通信に時間がかかっています。恐れ入りますが、通信環境をご確認のうえ再度お試しください。'
+  );
+}, 20000);
 }
 
 function getCheckedValue(form, name) {
