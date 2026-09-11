@@ -153,7 +153,7 @@ body {
 }
 
 .compact-grid.name-age {
-  grid-template-columns: minmax(0, 1.55fr) minmax(150px, .75fr);
+  grid-template-columns: 1fr 1fr;
 }
 
 .compact-grid .form-group {
@@ -279,6 +279,36 @@ input[type="checkbox"] {
 .error-box {
   border-color: var(--danger) !important;
   background: #fff8f8 !important;
+}
+
+/* 送信時の入力エラーを分かりやすく表示 */
+.was-validated input:invalid,
+.was-validated select:invalid {
+  border-color: var(--danger) !important;
+  background: #fff7f7 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .08) !important;
+}
+
+.was-validated .radio-grid.invalid-group,
+.was-validated .check-grid-inner.invalid-group,
+.was-validated .scroll-box.invalid-group {
+  padding: 10px;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  background: #fff7f7;
+}
+
+.field-error {
+  display: none;
+  margin-top: 7px;
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.field-error.show {
+  display: block;
 }
 
 .submit-btn {
@@ -566,7 +596,7 @@ input[type="checkbox"] {
           <label><input type="checkbox" name="conditions" value="転勤なし / 地元で働きたい">転勤なし / 地元で働きたい</label>
           <label><input type="checkbox" name="conditions" value="その他・福利厚生重視">その他・福利厚生重視</label>
         </div>
-        <div id="conditions-error" class="validation-error">※1つ以上選択してください</div>
+        <div id="conditions-error" class="validation-error field-error">※1つ以上選択してください</div>
       </div>
 
       <div class="form-group">
@@ -615,7 +645,7 @@ input[type="checkbox"] {
             <label><input type="checkbox" name="qualifications" value="その他">その他</label>
           </div>
         </div>
-        <div id="qual-error" class="validation-error">※1つ以上選択してください</div>
+        <div id="qual-error" class="validation-error field-error">※1つ以上選択してください</div>
       </div>
 
       <div class="form-group">
@@ -629,6 +659,7 @@ input[type="checkbox"] {
           <label class="radio-label"><input type="radio" name="experience" value="いずれの経験もない">いずれの経験もない</label>
           <label class="radio-label"><input type="radio" name="experience" value="その他">その他</label>
         </div>
+        <div class="field-error" id="experience-error">※経験を選択してください</div>
       </div>
 
       <div class="form-group">
@@ -642,6 +673,7 @@ input[type="checkbox"] {
           <label class="radio-label"><input type="radio" name="timing" value="1年以内">1年以内</label>
           <label class="radio-label"><input type="radio" name="timing" value="未定">未定</label>
         </div>
+        <div class="field-error" id="timing-error">※ご希望の転職時期を選択してください</div>
       </div>
 
       <div class="form-group">
@@ -653,12 +685,14 @@ input[type="checkbox"] {
           <label class="radio-label"><input type="radio" name="employmentType" value="アルバイト">アルバイト</label>
           <label class="radio-label"><input type="radio" name="employmentType" value="その他">その他</label>
         </div>
+        <div class="field-error" id="employmentType-error">※ご希望の雇用形態を選択してください</div>
       </div>
 
       <div class="compact-grid name-age">
         <div class="form-group">
           <div class="question-label"><span>名前（フルネーム）</span></div>
           <input type="text" name="name" autocomplete="name" placeholder="例：山田 太郎" maxlength="50" required>
+          <div class="field-error" id="name-error">※名前（フルネーム）を入力してください</div>
         </div>
 
         <div class="form-group">
@@ -666,6 +700,7 @@ input[type="checkbox"] {
           <select name="age" id="age" required>
             <option value="">選択してください</option>
           </select>
+          <div class="field-error" id="age-error">※ご年齢を選択してください</div>
         </div>
       </div>
 
@@ -684,6 +719,7 @@ input[type="checkbox"] {
             title="ハイフンなしの10〜11桁で入力してください"
             required
           >
+          <div class="field-error" id="phone-error">※電話番号を入力してください</div>
         </div>
 
         <div class="form-group">
@@ -700,6 +736,7 @@ input[type="checkbox"] {
           <select id="pref_home" name="pref_home" required>
             <option value="">都道府県を選択してください</option>
           </select>
+          <div class="field-error" id="pref_home-error">※お住まいの都道府県を選択してください</div>
         </div>
 
         <div class="form-group">
@@ -712,6 +749,7 @@ input[type="checkbox"] {
             readonly
             required
           >
+          <div class="field-error" id="desiredLocation-error">※希望勤務地を選択してください</div>
         </div>
       </div>
 
@@ -772,16 +810,44 @@ input[type="checkbox"] {
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
 <script>
-var prefs = [
-  "北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県",
-  "茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県",
-  "新潟県","富山県","石川県","福井県","山梨県","長野県",
-  "岐阜県","静岡県","愛知県","三重県",
-  "滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県",
-  "鳥取県","島根県","岡山県","広島県","山口県",
-  "徳島県","香川県","愛媛県","高知県",
-  "福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"
+var prefGroups = [
+  {
+    label: "北海道・東北",
+    items: ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県"]
+  },
+  {
+    label: "関東",
+    items: ["茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県"]
+  },
+  {
+    label: "甲信越・北陸",
+    items: ["新潟県","富山県","石川県","福井県","山梨県","長野県"]
+  },
+  {
+    label: "東海",
+    items: ["岐阜県","静岡県","愛知県","三重県"]
+  },
+  {
+    label: "関西",
+    items: ["滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県"]
+  },
+  {
+    label: "中国",
+    items: ["鳥取県","島根県","岡山県","広島県","山口県"]
+  },
+  {
+    label: "四国",
+    items: ["徳島県","香川県","愛媛県","高知県"]
+  },
+  {
+    label: "九州・沖縄",
+    items: ["福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
+  }
 ];
+
+var prefs = prefGroups.reduce(function(all, group) {
+  return all.concat(group.items);
+}, []);
 
 var prefWorkChoices = null;
 var currentRequestId = '';
@@ -794,6 +860,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initAgeOptions();
   initPrefOptions();
   bindHomePrefSync();
+  clearErrorOnInput();
 });
 
 function initAgeOptions() {
@@ -804,14 +871,44 @@ function initAgeOptions() {
   }
 }
 
+function appendPrefGroups(selectEl, excludedPref) {
+  selectEl.innerHTML = '';
+
+  prefGroups.forEach(function(group) {
+    var optgroup = document.createElement('optgroup');
+    optgroup.label = group.label;
+
+    group.items.forEach(function(pref) {
+      if (pref !== excludedPref) {
+        optgroup.appendChild(new Option(pref, pref));
+      }
+    });
+
+    if (optgroup.children.length > 0) {
+      selectEl.appendChild(optgroup);
+    }
+  });
+}
+
 function initPrefOptions() {
   var prefHome = document.getElementById('pref_home');
   var prefWork = document.getElementById('pref_work');
 
-  prefs.forEach(function(pref) {
-    prefHome.appendChild(new Option(pref, pref));
-    prefWork.appendChild(new Option(pref, pref));
+  // お住まい：先頭の案内を残し、その下をエリア別にグループ化
+  prefHome.innerHTML = '<option value="">都道府県を選択してください</option>';
+  prefGroups.forEach(function(group) {
+    var optgroup = document.createElement('optgroup');
+    optgroup.label = group.label;
+
+    group.items.forEach(function(pref) {
+      optgroup.appendChild(new Option(pref, pref));
+    });
+
+    prefHome.appendChild(optgroup);
   });
+
+  // 追加希望勤務地もエリア別
+  appendPrefGroups(prefWork, '');
 
   prefWorkChoices = new Choices(prefWork, {
     removeItemButton: true,
@@ -843,20 +940,16 @@ function rebuildAdditionalPrefChoices(homePref) {
     if (!Array.isArray(current)) {
       current = current ? [current] : [];
     }
+
     saved = current.filter(function(pref) {
       return pref !== homePref;
     });
+
     prefWorkChoices.destroy();
   }
 
   var prefWork = document.getElementById('pref_work');
-  prefWork.innerHTML = '';
-
-  prefs.forEach(function(pref) {
-    if (pref !== homePref) {
-      prefWork.appendChild(new Option(pref, pref));
-    }
-  });
+  appendPrefGroups(prefWork, homePref);
 
   prefWorkChoices = new Choices(prefWork, {
     removeItemButton: true,
@@ -872,8 +965,6 @@ function rebuildAdditionalPrefChoices(homePref) {
   if (saved.length > 0) {
     prefWorkChoices.setChoiceByValue(saved);
   }
-
-
 }
 
 // 流入判別用URLパラメータを、その場で読み取るだけ（端末保存なし）
@@ -899,6 +990,7 @@ function validateCheckboxGroup(name, errorId, boxId) {
 
   var error = document.getElementById(errorId);
   error.style.display = checked ? 'none' : 'block';
+  error.classList.toggle('show', !checked);
 
   if (boxId) {
     var box = document.getElementById(boxId);
@@ -908,6 +1000,81 @@ function validateCheckboxGroup(name, errorId, boxId) {
   return checked;
 }
 
+function setFieldError(fieldName, errorId) {
+  var field = document.querySelector('[name="' + fieldName + '"]');
+  var error = document.getElementById(errorId);
+
+  if (!field || !error) return true;
+
+  var valid = field.checkValidity();
+  error.classList.toggle('show', !valid);
+
+  return valid;
+}
+
+function setRadioGroupError(name, errorId) {
+  var group = document.querySelector('input[name="' + name + '"]');
+  var checked = document.querySelector('input[name="' + name + '"]:checked');
+  var error = document.getElementById(errorId);
+  var grid = group ? group.closest('.radio-grid') : null;
+
+  var valid = !!checked;
+
+  if (error) {
+    error.classList.toggle('show', !valid);
+  }
+
+  if (grid) {
+    grid.classList.toggle('invalid-group', !valid);
+  }
+
+  return valid;
+}
+
+function validateVisibleFields() {
+  var ok = true;
+
+  ok = setFieldError('name', 'name-error') && ok;
+  ok = setFieldError('age', 'age-error') && ok;
+  ok = setFieldError('phone', 'phone-error') && ok;
+  ok = setFieldError('pref_home', 'pref_home-error') && ok;
+  ok = setFieldError('desiredLocation', 'desiredLocation-error') && ok;
+
+  ok = setRadioGroupError('experience', 'experience-error') && ok;
+  ok = setRadioGroupError('timing', 'timing-error') && ok;
+  ok = setRadioGroupError('employmentType', 'employmentType-error') && ok;
+
+  return ok;
+}
+
+function clearErrorOnInput() {
+  var form = document.getElementById('offerForm');
+
+  form.addEventListener('input', function(event) {
+    var target = event.target;
+
+    if (target.name) {
+      var directError = document.getElementById(target.name + '-error');
+      if (directError && target.checkValidity()) {
+        directError.classList.remove('show');
+      }
+    }
+  });
+
+  form.addEventListener('change', function(event) {
+    var target = event.target;
+
+    if (target.type === 'radio') {
+      setRadioGroupError(target.name, target.name + '-error');
+    } else if (target.name) {
+      var directError = document.getElementById(target.name + '-error');
+      if (directError && target.checkValidity()) {
+        directError.classList.remove('show');
+      }
+    }
+  });
+}
+
 function handleFormSubmit(event) {
   event.preventDefault();
 
@@ -915,6 +1082,8 @@ function handleFormSubmit(event) {
   var submitError = document.getElementById('submitError');
   submitError.style.display = 'none';
   submitError.textContent = '';
+
+  form.classList.add('was-validated');
 
   var conditionsValid = validateCheckboxGroup(
     'conditions',
@@ -927,20 +1096,36 @@ function handleFormSubmit(event) {
     'qualificationsBox'
   );
 
-  if (!form.checkValidity() || !conditionsValid || !qualificationsValid) {
-    if (!conditionsValid) {
-      document.getElementById('conditions-error').scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
-    } else if (!qualificationsValid) {
-      document.getElementById('qualificationsBox').scrollIntoView({
+  var visibleFieldsValid = validateVisibleFields();
+
+  var conditionsGrid = form.querySelector('input[name="conditions"]')
+    ? form.querySelector('input[name="conditions"]').closest('.check-grid-inner')
+    : null;
+
+  if (conditionsGrid) {
+    conditionsGrid.classList.toggle('invalid-group', !conditionsValid);
+  }
+
+  var qualificationsBox = document.getElementById('qualificationsBox');
+  if (qualificationsBox) {
+    qualificationsBox.classList.toggle('invalid-group', !qualificationsValid);
+  }
+
+  if (!form.checkValidity() || !conditionsValid || !qualificationsValid || !visibleFieldsValid) {
+    var firstInvalid =
+      document.querySelector('.field-error.show') ||
+      document.getElementById('conditions-error') ||
+      document.getElementById('qual-error');
+
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({
         behavior: 'smooth',
         block: 'center'
       });
     } else {
       form.reportValidity();
     }
+
     return;
   }
 
