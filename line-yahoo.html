@@ -8,7 +8,6 @@ window.yjDataLayer = window.yjDataLayer || [];
 function ytag() { yjDataLayer.push(arguments); }
 ytag({"type":"ycl_cookie","config":{"ycl_use_non_cookie_storage":true}});
 </script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>クロスワーク｜現場職向け転職サービス</title>
@@ -208,9 +207,9 @@ select {
   width: 100%;
   min-height: 48px;
   padding: 12px;
-  border: 1px solid #bad3ec;
+  border: 1px solid #d6dee7;
   border-radius: 8px;
-  background: var(--blue-field);
+  background: #fff;
   color: var(--text);
   font-size: 15px;
   outline: none;
@@ -220,12 +219,13 @@ select {
 input:focus,
 select:focus {
   border-color: var(--blue);
-  background: #fff;
+  background: var(--blue-field);
   box-shadow: 0 0 0 3px rgba(8, 119, 249, .10);
 }
 
 input[readonly] {
-  background: #edf5fc;
+  background: #f4f6f8;
+  border-color: #d6dee7;
   color: #40566d;
   cursor: not-allowed;
 }
@@ -348,15 +348,15 @@ input[type="checkbox"] {
 .choices__inner {
   min-height: 48px;
   padding: 5px 8px;
-  border: 1px solid #bad3ec;
+  border: 1px solid #d6dee7;
   border-radius: 8px;
-  background: var(--blue-field);
+  background: #fff;
   font-size: 14px;
 }
 
 .choices.is-focused .choices__inner {
   border-color: var(--blue);
-  background: #fff;
+  background: var(--blue-field);
   box-shadow: 0 0 0 3px rgba(8, 119, 249, .10);
 }
 
@@ -468,6 +468,22 @@ input[type="checkbox"] {
   margin-top: 12px;
   color: #8294a5;
   font-size: 11px;
+}
+
+
+.privacy-notice {
+  max-width: 560px;
+  margin: 26px auto 0;
+  color: var(--subtext);
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.privacy-notice a {
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 #submitError {
@@ -768,6 +784,18 @@ input[type="checkbox"] {
         <select id="pref_work" name="pref_work" multiple></select>
       </div>
 
+      <div class="privacy-notice">
+        <a
+          href="https://www.xmile.co.jp/policy/01"
+          target="_blank"
+          rel="noopener"
+        >個人情報保護方針</a>と<a
+          href="https://www.xmile.co.jp/rule"
+          target="_blank"
+          rel="noopener"
+        >利用規約</a>に同意の上、希望条件を送信してください。
+      </div>
+
       <button type="submit" class="submit-btn" id="submitBtn">希望条件を送信する</button>
     </form>
     </div>
@@ -860,9 +888,13 @@ var prefs = prefGroups.reduce(function(all, group) {
 var prefWorkChoices = null;
 var currentRequestId = '';
 var submitTimeoutId = null;
+var statusPollTimer = null;
+var statusScript = null;
+var activeHiddenForm = null;
+var submitFinished = false;
 
-// ★ 新しいGASをデプロイしたあと、ここだけ /exec URLに置き換える
-var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbz_60biXc0FGM7DOHDO_EWdoM47hVHbOl24d2jAa6Hl9VW1fs5qhrN-jDvqk1nlDXXU/exec';
+// ★ LINEヤフー用GASをデプロイした /exec URL に置き換える
+var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbyApcWM4beBB0GQFfrlc2vbQnxLLEZttku1RQD_S-LCOYt8tjkJ9uzWHLgBNAmIvUXO/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
   initAgeOptions();
@@ -980,8 +1012,7 @@ function getTrackingParams() {
   var params = new URLSearchParams(window.location.search);
 
   return {
-    // LINEヤフー広告用LPのため、流入元は固定で保存
-    utm_source: 'LINEヤフー広告',
+    utm_source: params.get('utm_source') || '',
     utm_medium: params.get('utm_medium') || '',
     utm_campaign: params.get('utm_campaign') || '',
     utm_content: params.get('utm_content') || '',
@@ -1343,6 +1374,8 @@ function handleFormSubmit(event) {
     pref_home: form.elements['pref_home'].value,
     desiredLocation: form.elements['desiredLocation'].value,
     pref_work: prefWorkValues.join('、'),
+    // 送信ボタンの押下を個人情報保護方針への同意として記録
+    privacyConsent: '同意する',
     utm_source: tracking.utm_source,
     utm_medium: tracking.utm_medium,
     utm_campaign: tracking.utm_campaign,
@@ -1371,9 +1404,26 @@ function handleFormSubmit(event) {
 
   document.body.appendChild(hiddenForm);
 
-var submitFinished = false;
-var statusPollTimer = null;
-var statusScript = null;
+  activeHiddenForm = hiddenForm;
+  submitFinished = false;
+
+  hiddenForm.submit();
+
+  // GAS側の保存結果を request_id で確認
+  scheduleStatusCheck(600);
+
+  // 20秒経っても結果が取得できない場合のみエラー表示
+  submitTimeoutId = window.setTimeout(function() {
+    if (submitFinished) return;
+
+    submitFinished = true;
+    cleanupSubmission();
+
+    showSubmitError(
+      '通信に時間がかかっています。恐れ入りますが、通信環境をご確認のうえ再度お試しください。'
+    );
+  }, 20000);
+}
 
 function cleanupSubmission() {
   if (submitTimeoutId) {
@@ -1388,26 +1438,24 @@ function cleanupSubmission() {
 
   if (statusScript && statusScript.parentNode) {
     statusScript.remove();
-    statusScript = null;
   }
+  statusScript = null;
 
-  if (hiddenForm && hiddenForm.parentNode) {
-    hiddenForm.remove();
+  if (activeHiddenForm && activeHiddenForm.parentNode) {
+    activeHiddenForm.remove();
   }
-
-  try {
-    delete window.lpSubmitStatusCallback;
-  } catch (e) {
-    window.lpSubmitStatusCallback = undefined;
-  }
+  activeHiddenForm = null;
 }
 
 function restoreSubmitButton() {
+  var btn = document.getElementById('submitBtn');
   btn.disabled = false;
   btn.textContent = '希望条件を送信する';
 }
 
 function showSubmitError(message) {
+  var submitError = document.getElementById('submitError');
+
   restoreSubmitButton();
 
   submitError.textContent =
@@ -1439,7 +1487,6 @@ function checkSubmitStatus() {
   }
 
   statusScript = document.createElement('script');
-
   statusScript.src =
     gasUrl +
     '?mode=status' +
@@ -1462,7 +1509,6 @@ window.lpSubmitStatusCallback = function(data) {
     return;
   }
 
-  // GAS処理がまだ終わっていない
   if (data.status === 'pending') {
     scheduleStatusCheck(700);
     return;
@@ -1476,10 +1522,7 @@ window.lpSubmitStatusCallback = function(data) {
   cleanupSubmission();
 
   if (resultStatus === 'success') {
-    // SSへの保存成功時だけLINEヤフー広告CV発火
     fireYahooConversion(currentRequestId);
-
-    // サンクス画面表示
     showSuccess();
     return;
   }
@@ -1498,25 +1541,6 @@ window.lpSubmitStatusCallback = function(data) {
   );
 };
 
-// GASへフォーム送信
-hiddenForm.submit();
-
-// 0.6秒後から結果確認開始
-scheduleStatusCheck(600);
-
-// 20秒経っても結果が取れなければエラー
-submitTimeoutId = window.setTimeout(function() {
-  if (submitFinished) return;
-
-  submitFinished = true;
-  cleanupSubmission();
-
-  showSubmitError(
-    '通信に時間がかかっています。恐れ入りますが、通信環境をご確認のうえ再度お試しください。'
-  );
-}, 20000);
-}
-
 function getCheckedValue(form, name) {
   var checked = form.querySelector(
     'input[name="' + name + '"]:checked'
@@ -1524,14 +1548,13 @@ function getCheckedValue(form, name) {
   return checked ? checked.value : '';
 }
 
+
 // LINEヤフー広告：GAS保存成功時だけコンバージョンを送信
 function fireYahooConversion(transactionId) {
-
-  console.log('Yahoo CV発火処理に入りました', transactionId);
-  console.log('ytagの状態:', typeof ytag);
-
   if (typeof ytag !== 'function') {
-    console.warn('LINEヤフー広告の計測タグを読み込めなかったため、CV送信をスキップしました。');
+    console.warn(
+      'LINEヤフー広告の計測タグを読み込めなかったため、CV送信をスキップしました。'
+    );
     return;
   }
 
@@ -1544,8 +1567,6 @@ function fireYahooConversion(transactionId) {
       "yahoo_ydn_conv_value": "0"
     }
   });
-
-  console.log('Yahoo CVタグを実行しました');
 }
 
 function showSuccess() {
