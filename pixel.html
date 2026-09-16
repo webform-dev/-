@@ -1,996 +1,1620 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<base target="_top">
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1573348431188454');
+fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=1573348431188454&ev=PageView&noscript=1"
+       alt="">
+</noscript>
+<!-- End Meta Pixel Code -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>クロスワーク｜現場職向け転職サービス</title>
+
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-<!-- Choices.js のCSS (複数選択UI用) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+
 <style>
-*, *:before, *:after {
-    box-sizing: border-box;
-    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+:root {
+  --blue: #0877f9;
+  --blue-dark: #0054b8;
+  --blue-soft: #eef7ff;
+  --blue-field: #f7fbff;
+  --text: #17324d;
+  --subtext: #536b82;
+  --danger: #dc2626;
 }
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+html { scroll-behavior: smooth; }
+
 body {
-    background-color: #f4f5f7;
-    color: #333333;
-    margin: 0;
+  margin: 0;
+  color: var(--text);
+  background: #edf7ff;
 }
-.header {
-    background-color: #ffffff;
-    padding: 0 20px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70px;
+
+/* ヘッダー画像とフォームを1枚のLPとしてつなげる */
+.lp-shell {
+  width: calc(100% - 24px);
+  max-width: 800px;
+  margin: 22px auto 32px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 34px rgba(0, 82, 204, .12);
 }
-.header-logo-svg {
-    height: 32px;
-    width: 164px;
-    fill: #0052cc;
-    display: block;
-    flex-shrink: 0;
+
+.brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 48px;
+  padding: 7px 22px;
+  background: #fff;
 }
+
+.brand-logo-svg {
+  display: block;
+  width: 142px;
+  height: auto;
+  fill: #0052cc;
+}
+
+.hero {
+  width: 100%;
+  background: #fff;
+}
+
+/* 生成ロゴ部分を切り取った hero-header.png を表示 */
+.hero-inner {
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #f2f9ff;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
 .container {
-    background-color: #ffffff;
-    max-width: 800px;
-    margin: 30px auto 20px auto;
-    padding: 35px 40px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    border-radius: 6px;
-    border-top: 5px solid #0052cc;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 22px 38px 36px;
+  background: #fff;
+  border-radius: 0;
+  border-top: 0;
+  box-shadow: none;
 }
-.intro-box {
-    text-align: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eaeaea;
-}
-.intro-box h2 {
-    color: #333333;
-    font-size: 21px;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 12px;
-    letter-spacing: 1px;
-    border-bottom: 2px solid #0052cc;
-    display: inline-block;
-    padding-bottom: 6px;
-}
-.intro-box p {
-    font-size: 14px;
-    line-height: 1.5;
-    color: #444;
-    margin: 0 0 8px 0;
-    font-weight: 500;
-}
-.intro-highlight {
-    font-weight: 700;
-    color: #0052cc !important;
-    font-size: 15px !important;
-    margin-bottom: 8px !important;
-}
-.benefit-box {
-    background-color: #f8fbff;
-    border: 1px solid #dce8f9;
-    box-shadow: 0 6px 16px rgba(0, 82, 204, 0.08);
-    border-radius: 6px;
-    padding: 20px 25px;
-    margin: 10px auto 20px auto;
-    text-align: left;
-    display: inline-block;
-    max-width: 100%;
-}
-.benefit-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.benefit-list li {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #333333;
-    margin-bottom: 16px;
-    position: relative;
-    padding-left: 32px;
-}
-.benefit-list li:last-child {
-    margin-bottom: 0;
-}
-.benefit-list li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 1px;
-    width: 20px;
-    height: 20px;
-    background-color: #0052cc;
-    border-radius: 50%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-    background-size: 12px;
-    background-position: center;
-    background-repeat: no-repeat;
-    box-shadow: 0 2px 5px rgba(0, 82, 204, 0.2);
-}
-.benefit-title {
-    font-weight: 700;
-    display: block;
-    margin-bottom: 2px;
-}
-.benefit-desc {
-    font-weight: 400;
-    color: #666666;
-    font-size: 13px;
-    display: block;
-}
-.intro-conclusion {
-    font-weight: 700;
-    margin-top: 8px;
-    margin-bottom: 0 !important;
-}
-.form-group {
-    margin-bottom: 30px;
-}
-.form-group label {
-    display: block;
-    font-weight: 700;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #333333;
-}
-input[type="text"], input[type="tel"], input[type="email"], select, textarea { 
-    width: 100%; 
-    padding: 12px; 
-    border: 1px solid #ccc; 
-    border-radius: 4px; 
-    font-size: 15px; 
-    background: #fafafa; 
-    transition: border-color 0.3s, background-color 0.3s; 
-}
-input[type="text"]:focus, input[type="tel"]:focus, input[type="email"]:focus, select:focus, textarea:focus { 
-    border-color: #0052cc; 
-    outline: none; 
-    background: #fff; 
-}
-textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-.was-validated input:invalid,
-.was-validated select:invalid,
-.was-validated textarea:invalid {
-    border-color: #e60000 !important;
-    background-color: #fff9f9 !important;
-}
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-.scroll-box {
-    height: 200px;
-    overflow-y: auto;
-    border: 1px solid #cccccc;
-    padding: 15px;
-    background-color: #fafafa;
-    border-radius: 4px;
-}
-.radio-grid, .check-grid-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-.radio-label, .check-grid-inner label {
-    display: flex;
-    align-items: center;
-    background: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 12px;
-    border-radius: 4px;
-    font-size: 14px; cursor: pointer;
-    transition: border-color 0.2s;
-    color: #333;
-    font-weight: 500;
-}
-.radio-label:hover, .check-grid-inner label:hover {
-    border-color: #0052cc;
-}
-input[type="radio"], input[type="checkbox"] {
-    margin-right: 10px;
-    transform: scale(1.2);
-    accent-color: #0052cc;
-}
-.submit-btn {
-    display: block;
-    width: 100%;
-    max-width: 360px;
-    margin: 30px auto 10px auto;
-    background-color: #0052cc;
-    color: #ffffff;
-    padding: 16px 20px;
-    border: none;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 82, 204, 0.35);
-    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-}
-.submit-btn:hover {
-    background-color: #003d99;
-    box-shadow: 0 6px 16px rgba(0, 61, 153, 0.45);
-    transform: translateY(-1px);
-}
-.submit-btn:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
-/* Choices.js の見た目調整 */
-.choices__inner {
-    background-color: #fafafa;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 6.5px 8px;
-    min-height: 48px;
-    font-size: 15px;
-}
-.choices.is-focused .choices__inner {
-    border-color: #0052cc;
-    background-color: #fff;
-}
-.choices__list--multiple .choices__item {
-    background-color: #e5e7eb;
-    border: 1px solid #d1d5db;
-    color: #333;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 14px;
-}
-.choices[data-type*="select-multiple"] .choices__button {
-    border-left: 1px solid #ccc;
-    margin-left: 5px;
-    padding-left: 5px;
-}
+
+/* サンクス画面だけは単独カード */
 #successMessage {
-    display: none;
-    padding: 50px 20px;
-    text-align: center;
+  width: calc(100% - 24px);
+  max-width: 800px;
+  margin: 22px auto 32px;
+  border-radius: 16px;
+  box-shadow: 0 12px 34px rgba(0, 82, 204, .12);
 }
-.success-icon-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 25px;
+
+/* ヘッダー画像 → フォームの境目をぼかしつつスクロール誘導 */
+.scroll-cue {
+  display: flex;
+  width: 100%;
+  height: 54px;
+  margin-top: -1px;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    #eef8ff 0%,
+    #f5fbff 45%,
+    #ffffff 100%
+  );
+  text-decoration: none;
 }
-.success-checkmark {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: block;
-    stroke-width: 3;
-    stroke: #00a4f5;
-    stroke-miterlimit: 10;
-    box-shadow: inset 0px 0px 0px #00a4f5;
-    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+
+.scroll-cue::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  margin-top: 2px;
+  border-right: 3px solid #79b7ff;
+  border-bottom: 3px solid #79b7ff;
+  transform: rotate(45deg);
+  animation: cueDown 1.45s ease-in-out infinite;
 }
-.success-checkmark-circle {
-    stroke-dasharray: 166;
-    stroke-dashoffset: 166;
-    stroke-width: 3;
-    stroke-miterlimit: 10;
-    stroke: #00a4f5;
-    fill: none;
-    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+
+@keyframes cueDown {
+  0%, 100% {
+    transform: translateY(-4px) rotate(45deg);
+    opacity: .42;
+  }
+  50% {
+    transform: translateY(6px) rotate(45deg);
+    opacity: 1;
+  }
 }
-.success-checkmark-check {
-    transform-origin: 50% 50%;
-    stroke-dasharray: 48;
-    stroke-dashoffset: 48;
-    stroke: #00a4f5;
-    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+
+/* 個人情報など、短い入力欄は横並びにして縦の長さを圧縮 */
+.compact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 18px;
+  margin-top: 4px;
 }
-@keyframes stroke { 100% { stroke-dashoffset: 0; } }
-@keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
-@keyframes fill { 100% { box-shadow: inset 0px 0px 0px 30px transparent; } }
-.success-title { font-size: 22px; color: #333333; margin: 0 0 25px 0; font-weight: 700; }
-.success-flow { font-size: 16px; color: #0052cc; font-weight: 700; margin-bottom: 15px; }
-.success-desc { font-size: 14px; color: #333333; line-height: 1.6; font-weight: 500; margin: 0 0 20px 0; }
-.success-note { font-size: 11px; color: #888888; line-height: 1.6; margin-bottom: 40px; }
+
+.compact-grid.name-age {
+  grid-template-columns: 1fr 1fr;
+}
+
+.compact-grid .form-group {
+  margin-bottom: 8px;
+}
+
+.compact-grid .question-label {
+  margin-bottom: 8px;
+}
+
+.compact-full {
+  margin-top: 18px;
+}
+
+.form-group { margin-bottom: 30px; }
+
+.question-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+.optional {
+  color: #7890a8;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.helper-text {
+  margin: -3px 0 10px;
+  color: #678097;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #bad3ec;
+  border-radius: 8px;
+  background: var(--blue-field);
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  transition: border-color .2s, background-color .2s, box-shadow .2s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(8, 119, 249, .10);
+}
+
+input[readonly] {
+  background: #edf5fc;
+  color: #40566d;
+  cursor: not-allowed;
+}
+
+.radio-grid,
+.check-grid-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.radio-label,
+.check-grid-inner label {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid #c9def2;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .2s, background-color .2s;
+}
+
+.radio-label:hover,
+.check-grid-inner label:hover {
+  border-color: var(--blue);
+  background: #f7fbff;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  flex: 0 0 auto;
+  margin: 0 9px 0 0;
+  accent-color: var(--blue);
+  transform: scale(1.12);
+}
+
+.scroll-box {
+  max-height: 230px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid #c9def2;
+  border-radius: 8px;
+  background: #f9fcff;
+}
+
+.validation-error {
+  display: none;
+  margin-top: 7px;
+  color: var(--danger);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.error-box {
+  border-color: var(--danger) !important;
+  background: #fff8f8 !important;
+}
+
+/* 送信時の入力エラーを分かりやすく表示 */
+.was-validated input:invalid,
+.was-validated select:invalid {
+  border-color: var(--danger) !important;
+  background: #fff7f7 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .08) !important;
+}
+
+.was-validated .radio-grid.invalid-group,
+.was-validated .check-grid-inner.invalid-group,
+.was-validated .scroll-box.invalid-group {
+  padding: 10px;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  background: #fff7f7;
+}
+
+.field-error {
+  display: none;
+  margin-top: 7px;
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.field-error.show {
+  display: block;
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  max-width: 390px;
+  margin: 34px auto 6px;
+  padding: 16px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(8, 119, 249, .28);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+
+.submit-btn:disabled {
+  background: #a9b8c7;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+
+.choices { margin-bottom: 0; }
+
+.choices__inner {
+  min-height: 48px;
+  padding: 5px 8px;
+  border: 1px solid #bad3ec;
+  border-radius: 8px;
+  background: var(--blue-field);
+  font-size: 14px;
+}
+
+.choices.is-focused .choices__inner {
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(8, 119, 249, .10);
+}
+
+.choices__list--multiple .choices__item {
+  border: 1px solid #bfd8f3;
+  border-radius: 5px;
+  background: #e9f4ff;
+  color: #184c7d;
+  font-size: 12px;
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+  z-index: 30;
+}
+
+#successMessage {
+  display: none;
+  text-align: center;
+  padding-top: 46px;
+  padding-bottom: 46px;
+}
+
+.success-check {
+  display: flex;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e5f3ff;
+  color: var(--blue);
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.success-title {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.success-desc {
+  margin: 0;
+  color: var(--subtext);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.success-flow {
+  margin: 14px 0 10px;
+  color: var(--blue);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.success-note {
+  margin: 12px 0 0;
+  color: #8394a6;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
 .urgent-box {
-    background-color: #f2f8ff;
-    border: 1px solid #dce8f9;
-    border-radius: 8px;
-    padding: 30px 20px;
-    max-width: 480px;
-    margin: 0 auto;
-    box-sizing: border-box;
+  max-width: 480px;
+  margin: 34px auto 0;
+  padding: 24px 22px;
+  border: 1px solid #cfe2f6;
+  border-radius: 12px;
+  background: #f2f8ff;
 }
-.urgent-title { font-size: 16px; color: #0052cc; font-weight: 700; margin-bottom: 12px; }
+
+.urgent-title {
+  margin-bottom: 8px;
+  color: var(--blue-dark);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.urgent-desc {
+  margin: 0 0 18px;
+  color: var(--subtext);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
 .urgent-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #007aff;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: 700;
-    padding: 14px 20px;
-    border-radius: 50px;
-    width: 100%;
-    max-width: 320px;
-    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
-    transition: background-color 0.3s, transform 0.2s;
+  display: inline-flex;
+  width: 100%;
+  max-width: 320px;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(8, 119, 249, .24);
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
 }
-.urgent-btn svg { width: 20px; height: 20px; fill: #ffffff; margin-right: 8px; }
-.urgent-btn:hover { background-color: #006ae6; transform: translateY(-1px); }
-.urgent-time { font-size: 12px; color: #888888; margin-top: 15px; }
+
+.urgent-btn:hover {
+  background: var(--blue-dark);
+}
+
+.urgent-time {
+  margin-top: 12px;
+  color: #8294a5;
+  font-size: 11px;
+}
+
+
+.privacy-notice {
+  max-width: 560px;
+  margin: 26px auto 0;
+  color: var(--subtext);
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.privacy-notice a {
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+#submitError {
+  display: none;
+  max-width: 620px;
+  margin: 0 auto 20px;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fff7f7;
+  color: #b91c1c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .site-footer {
-    background-color: #ffffff;
-    border-top: 1px solid #e1e4e8;
-    padding: 40px 20px 30px 20px;
-    margin-top: 60px;
+  padding: 28px 16px 34px;
+  border-top: 1px solid #dbeafb;
+  background: rgba(255,255,255,.72);
+  text-align: center;
 }
-.footer-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 40px;
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 18px;
+  margin-bottom: 12px;
 }
-.footer-left { display: flex; flex-direction: column; justify-content: flex-start; }
-.footer-logo { margin-bottom: 15px; }
-.footer-desc { font-size: 12px; color: #6a737d; line-height: 1.6; margin: 0 0 20px 0; }
-.footer-links-inline a { font-size: 13px; color: #0052cc; text-decoration: none; font-weight: 700; }
-.footer-links-inline a:hover { text-decoration: underline; }
-.footer-right-box { background-color: transparent; border: none; padding: 10px 0; box-sizing: border-box; }
-.footer-right-box h4 { color: #333333; font-size: 14px; margin-top: 0; margin-bottom: 10px; font-weight: 500; text-align: center; }
-.contact-inner-title { color: #0052cc; font-size: 16px; font-weight: 700; margin-bottom: 15px; text-align: center; }
-.contact-item-row { display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 15px; font-weight: 700; }
-.contact-icon-bg { display: inline-flex; justify-content: center; align-items: center; color: #0052cc; margin-right: 8px; }
-.contact-icon-bg svg { width: 18px; height: 18px; fill: currentColor; }
-.contact-link-style { color: #333333; text-decoration: none; }
-.contact-link-style:hover { color: #0052cc; text-decoration: underline; }
-.contact-note-text { font-size: 12px; color: #666666; text-align: center; margin-top: 15px; margin-bottom: 0; }
-.footer-copyright-row { max-width: 1000px; margin: 30px auto 0 auto; padding-top: 20px; border-top: 1px solid #eeeeee; text-align: center; font-size: 12px; color: #b0b0b0; }
-@media (max-width: 768px) {
-    .grid-2, .radio-grid, .check-grid-inner { grid-template-columns: 1fr; }
-    .container { padding: 25px 20px; margin: 20px 10px; }
-    .benefit-box { padding: 15px; }
-    .footer-container { grid-template-columns: 1fr; gap: 30px; }
-    .site-footer { padding: 30px 15px 20px 15px; margin-top: 40px; }
+
+.footer-links a {
+  color: #326a9d;
+  font-size: 12px;
+  text-decoration: none;
 }
-.urgent-desc { font-size: 13px; color: #555555; line-height: 1.6; margin-bottom: 20px; }
-.footer-links-inline { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 10px; }
+
+.footer-copy {
+  color: #91a3b5;
+  font-size: 11px;
+}
+
+@media (max-width: 640px) {
+  .lp-shell {
+    width: calc(100% - 18px);
+    margin: 9px auto 24px;
+    border-radius: 12px;
+  }
+
+  .container {
+    padding: 24px 16px 28px;
+  }
+
+  #successMessage {
+    width: calc(100% - 18px);
+    margin: 14px auto 24px;
+    border-radius: 12px;
+  }
+
+  .radio-grid,
+  .check-grid-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .compact-grid,
+  .compact-grid.name-age {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .scroll-cue {
+    height: 34px;
+  }
+
+  .urgent-box {
+    margin-top: 26px;
+    padding: 20px 16px;
+  }
+
+  .brand-bar {
+    height: 44px;
+    padding: 7px 14px;
+  }
+
+  .brand-logo-svg {
+    width: 132px;
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="header" id="mainHeader">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 205 40" width="205" height="40" class="header-logo-svg">
+
+<div class="lp-shell" id="lpShell">
+  <header class="hero" id="mainHeader">
+    <div class="brand-bar">
+      <!-- 既存フォームで使用していたオリジナルのクロスワークSVGロゴ -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 205 40" width="205" height="40" class="brand-logo-svg" aria-label="クロスワーク">
         <path d="M14.3522 0.550935H5.38155V4.85151C5.38155 9.0048 4.54706 12.5395 0.43428 16.3688L0.046875 16.7223L5.53058 24.2041L6.03722 23.7622C10.0904 20.1686 12.5938 16.1037 13.6667 11.3907H21.6539V13.6294C21.6539 20.3748 15.4847 28.7108 5.14312 30.9495L4.30865 31.1262L9.16652 39.4623L9.64337 39.315C22.7566 35.25 31.2206 25.2056 31.2206 13.7767V3.20198H14.3522V0.521484V0.550935Z"></path>
         <path d="M37.5977 37.8122H67.6687V2.78906H37.5977V37.8122ZM58.7576 11.1546V29.5056H46.5087V11.1546H58.7576Z"></path>
         <path d="M103.106 10.9484L103.196 10.8011V2.78906H75.1213V11.1546H92.2281C88.6518 17.4581 81.7674 26.0298 73.81 35.8681L72.2305 37.8122H83.4661L83.6449 37.5766C86.1484 34.4248 88.6518 31.2141 91.0956 28.0034L96.5495 37.8122H107.07L96.7581 20.2859C99.4702 16.4566 101.497 13.4816 103.076 10.9484H103.106Z"></path>
         <path d="M109.901 20.7279H118.752V10.7423H132.193V15.8088C132.193 20.7574 128.498 27.2966 120.332 29.9476L119.736 30.1244L122.537 38.5488L123.133 38.3131C134.339 33.9831 141.313 25.4114 141.313 15.8971V2.75977H109.871V20.6984L109.901 20.7279Z"></path>
         <path d="M169.654 16.0742H146.199V24.4397H169.654V16.0742Z"></path>
         <path d="M187.327 3.26042V0.609375H178.416V4.88049C178.416 8.97487 177.581 12.5096 173.528 16.2799L173.141 16.6334L178.595 24.0563L179.101 23.6145C183.125 20.0503 185.598 16.0443 186.671 11.3313H194.569V13.5405C194.569 20.227 188.459 28.4747 178.207 30.7134L177.373 30.8901L182.171 39.1672L182.648 39.0199C195.642 34.9845 204.046 25.0578 204.046 13.7173V3.23095H187.327V3.26042Z"></path>
-    </svg>
-</div>
-
-<div class="container" id="formContainer">
-    <div class="intro-box">
-        <h2>業界特化のエージェントがあなたの転職を無料サポート！</h2>
-        <p>求人探しから書類作成、面接調整・条件交渉など、一人で行うと多くの時間と労力がかかる転職活動…</p>
-        <p class="intro-highlight">当サービスでは、これらをすべて無料で丸ごとサポートいたします！</p>
-        <div class="benefit-box">
-            <ul class="benefit-list">
-                <li>
-                    <span class="benefit-title">非公開求人のご紹介</span>
-                    <span class="benefit-desc">一般公開前の求人や非公開求人など、企業担当が直接仕入れた好条件案件をご紹介可能です。</span>
-                </li>
-                <li>
-                    <span class="benefit-title">プロによる書類添削・面接対策</span>
-                    <span class="benefit-desc">企業からの評価が高まった事例もございます。</span>
-                </li>
-                <li>
-                    <span class="benefit-title">面倒な日程調整・条件交渉の代行</span>
-                    <span class="benefit-desc">在職中でもスムーズに転職活動を進められるようサポートさせていただきます。</span>
-                </li>
-            </ul>
-        </div>
-        <p class="intro-conclusion">あなたにぴったりの求人をご案内するため、ご希望の条件をお聞かせください。</p>
+      </svg>
     </div>
+
+    <div class="hero-inner">
+      <img
+        src="hero-main.png"
+        alt="現場職向け転職サービス"
+        class="hero-image"
+      >
+    </div>
+  </header>
+
+  <a class="scroll-cue" href="#offerForm" aria-label="入力フォームへ進む"></a>
+
+  <main>
+    <div class="container" id="formContainer">
+      <div id="submitError"></div>
 
     <form id="offerForm" novalidate onsubmit="handleFormSubmit(event)">
-        <!-- ▼ 名前＆生まれ年 ▼ -->
-        <div class="grid-2">
-            <div class="form-group">
-                <label>名前</label>
-                <input type="text" name="name" placeholder="例：山田 太郎" maxlength="50" required>
-            </div>
-            <div class="form-group">
-                <label>生まれ年</label>
-                <select name="birthYear" id="birthYear" required>
-                    <option value="">選択してください</option>
-                </select>
-            </div>
-        </div>
 
-        <!-- ▼ 電話番号＆メールアドレス ▼ -->
-        <div class="grid-2">
-            <div class="form-group">
-                <label>電話番号</label>
-                <input type="tel" name="phone" id="phone" placeholder="半角数字11桁（ハイフンなし）" maxlength="11" pattern="^\d{11}$" title="半角数字11桁（ハイフンなし）で入力してください" required>
-            </div>
-            <div class="form-group">
-                <label>メールアドレス</label>
-                <input type="email" name="email" id="email" placeholder="例：sample@example.com">
-            </div>
+      <div class="form-group">
+        <div class="question-label">
+          <span>転職で重視したいポイント <span class="optional">（複数選択可）</span></span>
         </div>
-
-        <!-- ▼ お住まい＆希望勤務地 ▼ -->
-        <div class="grid-2">
-            <div class="form-group">
-                <label>お住まい (郵便番号)</label>
-                <input type="text" id="zipcode" name="zipcode" placeholder="7桁数字（ハイフンなし）" maxlength="7" pattern="^\d{7}$" required>
-                <div id="zip-error" style="color: #e60000; font-size: 12px; margin-top: 4px; display: none;">※有効な郵便番号ではありません</div>
-            </div>
-            <div class="form-group">
-                <label>希望勤務地</label>
-                <input type="text" id="desiredLocation" name="desiredLocation" placeholder="お住まいから自動で反映" readonly style="background-color: #f1f5f9; cursor: not-allowed;">
-                
-                <p style="font-size: 12px; color: #666; margin: 10px 0 6px 0;">上記以外をご希望の場合は選択：</p>
-                <select id="pref_work" name="pref_work" multiple>
-                </select>
-            </div>
+        <div class="check-grid-inner">
+          <label><input type="checkbox" name="conditions" value="残業少なめ">残業少なめ</label>
+          <label><input type="checkbox" name="conditions" value="土日祝休み">土日祝休み</label>
+          <label><input type="checkbox" name="conditions" value="今より給与・年収を上げたい">今より給与・年収を上げたい</label>
+          <label><input type="checkbox" name="conditions" value="人間関係が良い職場">人間関係が良い職場</label>
+          <label><input type="checkbox" name="conditions" value="未経験・ブランク歓迎">未経験・ブランク歓迎</label>
+          <label><input type="checkbox" name="conditions" value="転勤なし / 地元で働きたい">転勤なし / 地元で働きたい</label>
+          <label><input type="checkbox" name="conditions" value="その他・福利厚生重視">その他・福利厚生重視</label>
         </div>
+        <div id="conditions-error" class="validation-error field-error">※1つ以上選択してください</div>
+      </div>
 
-        <!-- ▼ 経験 ▼ -->
+      <div class="form-group">
+        <div class="question-label">
+          <span>保有資格</span>
+        </div>
+        <p class="helper-text">該当する資格をすべてお選びください。「資格無し」も選択できます。</p>
+        <div class="scroll-box" id="qualificationsBox">
+          <div class="check-grid-inner">
+            <label><input type="checkbox" name="qualifications" value="1級建築施工管理技士">1級建築施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級建築施工管理技士">2級建築施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級建築施工管理技士補">1級建築施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="2級建築施工管理技士補">2級建築施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="1級土木施工管理技士">1級土木施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級土木施工管理技士">2級土木施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級土木施工管理技士補">1級土木施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="2級土木施工管理技士補">2級土木施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="1級管工事施工管理技士">1級管工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級管工事施工管理技士">2級管工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級管工事施工管理技士補">1級管工事施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="2級管工事施工管理技士補">2級管工事施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="1級電気工事施工管理技士">1級電気工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級電気工事施工管理技士">2級電気工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級電気工事施工管理技士補">1級電気工事施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="2級電気工事施工管理技士補">2級電気工事施工管理技士補</label>
+            <label><input type="checkbox" name="qualifications" value="1級建築士">1級建築士</label>
+            <label><input type="checkbox" name="qualifications" value="2級建築士">2級建築士</label>
+            <label><input type="checkbox" name="qualifications" value="1級造園施工管理技士">1級造園施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級造園施工管理技士">2級造園施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="1級電気通信工事施工管理技士">1級電気通信工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="2級電気通信工事施工管理技士">2級電気通信工事施工管理技士</label>
+            <label><input type="checkbox" name="qualifications" value="第一種電気主任技術者">第一種電気主任技術者</label>
+            <label><input type="checkbox" name="qualifications" value="第二種電気主任技術者">第二種電気主任技術者</label>
+            <label><input type="checkbox" name="qualifications" value="第三種電気主任技術者">第三種電気主任技術者</label>
+            <label><input type="checkbox" name="qualifications" value="第一種電気工事士">第一種電気工事士</label>
+            <label><input type="checkbox" name="qualifications" value="第二種電気工事士">第二種電気工事士</label>
+            <label><input type="checkbox" name="qualifications" value="技術士">技術士</label>
+            <label><input type="checkbox" name="qualifications" value="技術士補">技術士補</label>
+            <label><input type="checkbox" name="qualifications" value="RCCM">RCCM</label>
+            <label><input type="checkbox" name="qualifications" value="測量士">測量士</label>
+            <label><input type="checkbox" name="qualifications" value="測量士補">測量士補</label>
+            <label><input type="checkbox" name="qualifications" value="運転免許">運転免許</label>
+            <label><input type="checkbox" name="qualifications" value="大型免許">大型免許</label>
+            <label><input type="checkbox" name="qualifications" value="中型免許">中型免許</label>
+            <label><input type="checkbox" name="qualifications" value="資格無し">資格無し</label>
+            <label><input type="checkbox" name="qualifications" value="その他">その他</label>
+          </div>
+        </div>
+        <div id="qual-error" class="validation-error field-error">※1つ以上選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label">
+          <span>経験</span></div>
+        <div class="radio-grid">
+          <label class="radio-label"><input type="radio" name="experience" value="施工管理経験がある" required>施工管理経験がある</label>
+          <label class="radio-label"><input type="radio" name="experience" value="設計経験がある">設計経験がある</label>
+          <label class="radio-label"><input type="radio" name="experience" value="工事作業経験がある">工事作業経験がある</label>
+          <label class="radio-label"><input type="radio" name="experience" value="設備管理経験がある">設備管理経験がある</label>
+          <label class="radio-label"><input type="radio" name="experience" value="いずれの経験もない">いずれの経験もない</label>
+          <label class="radio-label"><input type="radio" name="experience" value="その他">その他</label>
+        </div>
+        <div class="field-error" id="experience-error">※経験を選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label">
+          <span>ご希望の転職時期</span></div>
+        <div class="radio-grid">
+          <label class="radio-label"><input type="radio" name="timing" value="すぐにでも" required>すぐにでも</label>
+          <label class="radio-label"><input type="radio" name="timing" value="1ヶ月以内">1ヶ月以内</label>
+          <label class="radio-label"><input type="radio" name="timing" value="3ヶ月以内">3ヶ月以内</label>
+          <label class="radio-label"><input type="radio" name="timing" value="半年以内">半年以内</label>
+          <label class="radio-label"><input type="radio" name="timing" value="1年以内">1年以内</label>
+          <label class="radio-label"><input type="radio" name="timing" value="未定">未定</label>
+        </div>
+        <div class="field-error" id="timing-error">※ご希望の転職時期を選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <div class="question-label">
+          <span>ご希望の雇用形態</span></div>
+        <div class="radio-grid">
+          <label class="radio-label"><input type="radio" name="employmentType" value="正社員" required>正社員</label>
+          <label class="radio-label"><input type="radio" name="employmentType" value="業務委託">業務委託</label>
+          <label class="radio-label"><input type="radio" name="employmentType" value="アルバイト">アルバイト</label>
+          <label class="radio-label"><input type="radio" name="employmentType" value="その他">その他</label>
+        </div>
+        <div class="field-error" id="employmentType-error">※ご希望の雇用形態を選択してください</div>
+      </div>
+
+      <div class="compact-grid name-age">
         <div class="form-group">
-            <label>経験</label>
-            <div class="radio-grid">
-                <label class="radio-label"><input type="radio" name="experience" value="施工管理経験がある" required>施工管理経験がある</label>
-                <label class="radio-label"><input type="radio" name="experience" value="設計経験がある">設計経験がある</label>
-                <label class="radio-label"><input type="radio" name="experience" value="工事作業経験がある">工事作業経験がある</label>
-                <label class="radio-label"><input type="radio" name="experience" value="設備管理経験がある">設備管理経験がある</label>
-                <label class="radio-label"><input type="radio" name="experience" value="いずれの経験もない">いずれの経験もない</label>
-                <label class="radio-label"><input type="radio" name="experience" value="その他">その他</label>
-            </div>
+          <div class="question-label"><span>名前（フルネーム）</span></div>
+          <input type="text" name="name" autocomplete="name" placeholder="例：山田 太郎" maxlength="50" required>
+          <div class="field-error" id="name-error">※名前（フルネーム）を入力してください</div>
         </div>
 
-        <!-- ▼ 保有資格 ▼ -->
         <div class="form-group">
-            <label>保有資格</label>
-            <p style="font-size: 13px; color: #555; margin: -5px 0 10px 0;">下記資格の中からスクロールしてお選びください。</p>
-            <div class="scroll-box" id="qualificationsBox">
-                <div class="check-grid-inner">
-                    <label><input type="checkbox" name="qualifications" value="1級建築施工管理技士">1級建築施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="2級建築施工管理技士">2級建築施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="1級建築施工管理技士補">1級建築施工管理技士補</label>
-                    <label><input type="checkbox" name="qualifications" value="2級建築施工管理技士補">2級建築施工管理技士補</label>
-                    <label><input type="checkbox" name="qualifications" value="1級土木施工管理技士">1級土木施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="2級土木施工管理技士">2級土木施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="1級土木施工管理技士補">1級土木施工管理技士補</label>
-                    <label><input type="checkbox" name="qualifications" value="2級土木施工管理技士補">2級土木施工管理技士補</label>
-                    <label><input type="checkbox" name="qualifications" value="1級管工事施工管理技士">1級管工事施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="2級管工事施工管理技士">2級管工事施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="1級管工事施工管理技士補">1級管工事施工管理技士補</label>
-                    <label><input type="checkbox" name="qualifications" value="2級管工事施工管理技士補">2級管工事施工管理技士補</label>
-                    <label><input type="checkbox" name="qualifications" value="1級電気工事施工管理技士">1級電気工事施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="2級電気工事施工管理技士">2級電気工事施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="1級電気工事施工管理技士補">1級電気工事施工管理技士補</label>
-                    <label><input type="checkbox" name="qualifications" value="2級電気工事施工管理技士補">2級電気工事施工管理技士補</label>
-                    <label><input type="checkbox" name="qualifications" value="1級建築士">1級建築士</label>
-                    <label><input type="checkbox" name="qualifications" value="2級建築士">2級建築士</label>
-                    <label><input type="checkbox" name="qualifications" value="1級造園施工管理技士">1級造園施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="2級造園施工管理技士">2級造園施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="1級電気通信工事施工管理技士">1級電気通信工事施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="2級電気通信工事施工管理技士">2級電気通信工事施工管理技士</label>
-                    <label><input type="checkbox" name="qualifications" value="第一種電気主任技術者">第一種電気主任技術者</label>
-                    <label><input type="checkbox" name="qualifications" value="第二種電気主任技術者">第二種電気主任技術者</label>
-                    <label><input type="checkbox" name="qualifications" value="第三種電気主任技術者">第三種電気主任技術者</label>
-                    <label><input type="checkbox" name="qualifications" value="第一種電気工事士">第一種電気工事士</label>
-                    <label><input type="checkbox" name="qualifications" value="第二種電気工事士">第二種電気工事士</label>
-                    <label><input type="checkbox" name="qualifications" value="技術士">技術士</label>
-                    <label><input type="checkbox" name="qualifications" value="技術士補">技術士補</label>
-                    <label><input type="checkbox" name="qualifications" value="RCCM">RCCM</label>
-                    <label><input type="checkbox" name="qualifications" value="測量士">測量士</label>
-                    <label><input type="checkbox" name="qualifications" value="測量士補">測量士補</label>
-                    <label><input type="checkbox" name="qualifications" value="運転免許">運転免許</label>
-                    <label><input type="checkbox" name="qualifications" value="大型免許">大型免許</label>
-                    <label><input type="checkbox" name="qualifications" value="中型免許">中型免許</label>
-                    <label><input type="checkbox" name="qualifications" value="資格無し">資格無し</label>
-                    <label><input type="checkbox" name="qualifications" value="その他">その他</label>
-                </div>
-            </div>
-            <div id="qual-error" style="color: #e60000; font-size: 13px; margin-top: 8px; display: none;">※保有資格を1つ以上選択してください</div>
+          <div class="question-label"><span>ご年齢</span></div>
+          <select name="age" id="age" required>
+            <option value="">選択してください</option>
+          </select>
+          <div class="field-error" id="age-error">※ご年齢を選択してください</div>
         </div>
+      </div>
 
-        <!-- ▼ 転職時期 ▼ -->
+      <div class="compact-grid">
         <div class="form-group">
-            <label>ご希望の転職時期</label>
-            <div class="radio-grid">
-                <label class="radio-label"><input type="radio" name="timing" value="すぐにでも" required>すぐにでも</label>
-                <label class="radio-label"><input type="radio" name="timing" value="1ヶ月以内">1ヶ月以内</label>
-                <label class="radio-label"><input type="radio" name="timing" value="3ヶ月以内">3ヶ月以内</label>
-                <label class="radio-label"><input type="radio" name="timing" value="半年以内">半年以内</label>
-                <label class="radio-label"><input type="radio" name="timing" value="1年以内">1年以内</label>
-                <label class="radio-label"><input type="radio" name="timing" value="未定">未定</label>
-            </div>
+          <div class="question-label"><span>電話番号</span></div>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            inputmode="numeric"
+            autocomplete="tel"
+            placeholder="例：09012345678"
+            maxlength="18"
+            pattern="(?:0[1-9][0-9]{8}|(?:050|070|080|090)[0-9]{8})"
+            title="有効な日本の電話番号をハイフンなしで入力してください"
+            required
+          >
+          <div class="field-error" id="phone-error">※正しい電話番号を入力してください</div>
         </div>
 
-        <!-- ▼ 雇用形態 ▼ -->
         <div class="form-group">
-            <label>ご希望の雇用形態</label>
-            <div class="radio-grid">
-                <label class="radio-label"><input type="radio" name="employmentType" value="正社員" required>正社員</label>
-                <label class="radio-label"><input type="radio" name="employmentType" value="業務委託">業務委託</label>
-                <label class="radio-label"><input type="radio" name="employmentType" value="アルバイト">アルバイト</label>
-                <label class="radio-label"><input type="radio" name="employmentType" value="その他">その他</label>
-            </div>
+          <div class="question-label">
+            <span>メールアドレス <span class="optional">（任意）</span></span>
+          </div>
+          <input type="email" name="email" id="email" autocomplete="email" placeholder="例：sample@example.com">
         </div>
+      </div>
 
-        <!-- ▼ 重視したいポイント ▼ -->
+      <div class="compact-grid">
         <div class="form-group">
-            <label>特に重視したいポイント <span style="font-size: 12px; font-weight: normal;">（複数選択可）</span></label>
-            <div class="check-grid-inner" style="margin-top: 10px;">
-                <label><input type="checkbox" name="conditions" value="残業少なめ">残業少なめ</label>
-                <label><input type="checkbox" name="conditions" value="土日祝休み">土日祝休み</label>
-                <label><input type="checkbox" name="conditions" value="今より給与・年収を上げたい">今より給与・年収を上げたい</label>
-                <label><input type="checkbox" name="conditions" value="人間関係が良い職場">人間関係が良い職場</label>
-                <label><input type="checkbox" name="conditions" value="未経験・ブランク歓迎">未経験・ブランク歓迎</label>
-                <label><input type="checkbox" name="conditions" value="転勤なし / 地元で働きたい">転勤なし / 地元で働きたい</label>
-                <label><input type="checkbox" name="conditions" value="その他・福利厚生重視">その他・福利厚生重視</label>
-            </div>
+          <div class="question-label"><span>お住まい</span></div>
+          <select id="pref_home" name="pref_home" required>
+            <option value="">都道府県を選択してください</option>
+          </select>
+          <div class="field-error" id="pref_home-error">※お住まいの都道府県を選択してください</div>
         </div>
 
-        <button type="submit" class="submit-btn" id="submitBtn">回答を送信する</button>
+        <div class="form-group">
+          <div class="question-label"><span>希望勤務地</span></div>
+          <input
+            type="text"
+            id="desiredLocation"
+            name="desiredLocation"
+            placeholder="お住まいから自動反映"
+            readonly
+            required
+          >
+          <div class="field-error" id="desiredLocation-error">※希望勤務地を選択してください</div>
+        </div>
+      </div>
+
+      <div class="form-group compact-full">
+        <div class="question-label">
+          <span>お住まい以外をご希望の場合は選択 <span class="optional">（任意・複数選択可）</span></span>
+        </div>
+        <select id="pref_work" name="pref_work" multiple></select>
+      </div>
+
+      <div class="privacy-notice">
+        送信前に
+        <a
+          href="https://www.xmile.co.jp/policy/01"
+          target="_blank"
+          rel="noopener"
+        >個人情報保護方針</a>
+        をご確認のうえ、希望条件を送信してください。
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">希望条件を送信する</button>
     </form>
+    </div>
+  </main>
 </div>
 
-<!-- サンクスページ -->
 <div class="container" id="successMessage">
-    <div class="success-icon-container">
-        <svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-            <circle class="success-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-            <path class="success-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-        </svg>
-    </div>
+    <div class="success-check">✓</div>
     <h2 class="success-title">ご回答の受付が完了しました！</h2>
+
     <div class="success-flow">今後の流れ：担当者からご連絡</div>
-    <p class="success-desc"> 内容が確認でき次第、担当者よりご連絡させていただきます。<br></p>
-    <p class="success-note"> ※大変恐れ入りますが、ご連絡までに少しお時間を頂く場合がございます。<br></p>
-    
+
+    <p class="success-desc">
+      内容を確認のうえ、担当者よりご連絡させていただきます。
+    </p>
+
+    <p class="success-note">
+      ※ご連絡までに少しお時間をいただく場合がございます。
+    </p>
+
     <div class="urgent-box">
-        <div class="urgent-title">お急ぎの方はこちら</div>
-        <p class="urgent-desc">お電話でのお問い合わせも受け付けております。<br>お急ぎの方は下記番号までご連絡ください。</p>
-        <a href="tel:050-1780-3205" class="urgent-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-            050-1780-3205
-        </a>
-        <div class="urgent-time">受付時間 10:00〜19:00(平日)</div>
+      <div class="urgent-title">お急ぎの方はこちら</div>
+      <p class="urgent-desc">
+        お電話でのお問い合わせも受け付けております。<br>
+        お急ぎの方は下記番号までご連絡ください。
+      </p>
+
+      <a href="tel:050-1780-3205" class="urgent-btn">
+        ☎&nbsp; 050-1780-3205
+      </a>
+
+      <div class="urgent-time">受付時間 10:00〜19:00（平日）</div>
     </div>
 </div>
 
-<!-- フッター -->
 <footer class="site-footer" id="mainFooter">
-    <div class="footer-container">
-        <div class="footer-left">
-            <div class="footer-logo">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 205 40" width="150" height="30" class="header-logo-svg">
-                    <path d="M14.3522 0.550935H5.38155V4.85151C5.38155 9.0048 4.54706 12.5395 0.43428 16.3688L0.046875 16.7223L5.53058 24.2041L6.03722 23.7622C10.0904 20.1686 12.5938 16.1037 13.6667 11.3907H21.6539V13.6294C21.6539 20.3748 15.4847 28.7108 5.14312 30.9495L4.30865 31.1262L9.16652 39.4623L9.64337 39.315C22.7566 35.25 31.2206 25.2056 31.2206 13.7767V3.20198H14.3522V0.521484V0.550935Z"></path>
-                    <path d="M37.5977 37.8122H67.6687V2.78906H37.5977V37.8122ZM58.7576 11.1546V29.5056H46.5087V11.1546H58.7576Z"></path>
-                    <path d="M103.106 10.9484L103.196 10.8011V2.78906H75.1213V11.1546H92.2281C88.6518 17.4581 81.7674 26.0298 73.81 35.8681L72.2305 37.8122H83.4661L83.6449 37.5766C86.1484 34.4248 88.6518 31.2141 91.0956 28.0034L96.5495 37.8122H107.07L96.7581 20.2859C99.4702 16.4566 101.497 13.4816 103.076 10.9484H103.106Z"></path>
-                    <path d="M109.901 20.7279H118.752V10.7423H132.193V15.8088C132.193 20.7574 128.498 27.2966 120.332 29.9476L119.736 30.1244L122.537 38.5488L123.133 38.3131C134.339 33.9831 141.313 25.4114 141.313 15.8971V2.75977H109.871V20.6984L109.901 20.7279Z"></path>
-                    <path d="M169.654 16.0742H146.199V24.4397H169.654V16.0742Z"></path>
-                    <path d="M187.327 3.26042V0.609375H178.416V4.88049C178.416 8.97487 177.581 12.5096 173.528 16.2799L173.141 16.6334L178.595 24.0563L179.101 23.6145C183.125 20.0503 185.598 16.0443 186.671 11.3313H194.569V13.5405C194.569 20.227 188.459 28.4747 178.207 30.7134L177.373 30.8901L182.171 39.1672L182.648 39.0199C195.642 34.9845 204.046 25.0578 204.046 13.7173V3.23095H187.327V3.26042Z"></path>
-                </svg>
-            </div>
-            <div class="footer-links-inline">
-                <span style="font-size:13px; font-weight:700; color:#333;">クロスワークについて</span>
-                <a href="https://www.xmile.co.jp/policy/01" target="_blank">個人情報保護方針</a>
-                <a href="https://www.xmile.co.jp/company" target="_blank">運営会社情報</a>
-                <a href="https://www.xmile.co.jp/rule" target="_blank">利用規約</a>
-                <a href="https://x-work.jp/posting-policy" target="_blank">掲載規定</a>
-            </div>
-        </div>
-        <div class="footer-right-box">
-            <h4>お問い合わせはこちら</h4>
-            <div class="contact-inner-title">クロスワーク運営事務局</div>
-            <div class="contact-item-row">
-                <span class="contact-icon-bg">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                </span>
-                <a href="tel:050-1780-3205" class="contact-link-style">050-1780-3205</a>
-            </div>
-            <div class="contact-item-row">
-                <span class="contact-icon-bg">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
-                </span>
-                <a href="mailto:customer.crs@x-work.jp" class="contact-link-style">customer.crs@x-work.jp</a>
-            </div>
-            <p class="contact-note-text">ご不明な点がございましたら、お気軽にご連絡ください。</p>
-        </div>
-    </div>
-    <div class="footer-copyright-row"> &copy; X Mile Inc. All rights reserved. </div>
+  <div class="footer-links">
+    <a href="https://www.xmile.co.jp/policy/01" target="_blank" rel="noopener">個人情報保護方針</a>
+    <a href="https://www.xmile.co.jp/company" target="_blank" rel="noopener">運営会社情報</a>
+    <a href="https://www.xmile.co.jp/rule" target="_blank" rel="noopener">利用規約</a>
+    <a href="https://x-work.jp/posting-policy" target="_blank" rel="noopener">掲載規定</a>
+  </div>
+  <div class="footer-copy">&copy; X Mile Inc. All rights reserved.</div>
 </footer>
 
-<!-- Choices.js (複数選択UI用JS) -->
+<iframe name="gasSubmitFrame" id="gasSubmitFrame" style="display:none;"></iframe>
+
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
 <script>
-// 北から順（JISコード順）の都道府県リスト
-var prefs = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"];
-var prefWorkChoices;
+var prefGroups = [
+  {
+    label: "北海道・東北",
+    items: ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県"]
+  },
+  {
+    label: "関東",
+    items: ["茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県"]
+  },
+  {
+    label: "甲信越・北陸",
+    items: ["新潟県","富山県","石川県","福井県","山梨県","長野県"]
+  },
+  {
+    label: "東海",
+    items: ["岐阜県","静岡県","愛知県","三重県"]
+  },
+  {
+    label: "関西",
+    items: ["滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県"]
+  },
+  {
+    label: "中国",
+    items: ["鳥取県","島根県","岡山県","広島県","山口県"]
+  },
+  {
+    label: "四国",
+    items: ["徳島県","香川県","愛媛県","高知県"]
+  },
+  {
+    label: "九州・沖縄",
+    items: ["福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
+  }
+];
 
-function initSelectOptions() {
-    var prefWork = document.getElementById('pref_work');
-    var birthYearSelect = document.getElementById('birthYear');
-    if (birthYearSelect && birthYearSelect.options.length <= 1) {
-        var currentYear = new Date().getFullYear();
-        var startYear = currentYear - 17;
-        var endYear = currentYear - 75;
-        for (var y = startYear; y >= endYear; y--) {
-            birthYearSelect.appendChild(new Option(y + "年", y + "年"));
-        }
-    }
-    if (prefWork && prefWork.options.length === 0) {
-        for (var i = 0; i < prefs.length; i++) {
-            prefWork.appendChild(new Option(prefs[i], prefs[i]));
-        }
-        prefWorkChoices = new Choices(prefWork, {
-            removeItemButton: true,
-            searchEnabled: true,
-            placeholder: true,
-            placeholderValue: '都道府県を選択',
-            itemSelectText: '',
-            noChoicesText: '選択肢がありません',
-            noResultsText: '見つかりませんでした',
-            shouldSort: false // 自動ソート（あいうえお順）をオフにして、北からの順番を維持
-        });
-    }
-}
+var prefs = prefGroups.reduce(function(all, group) {
+  return all.concat(group.items);
+}, []);
+
+var prefWorkChoices = null;
+var currentRequestId = '';
+var submitTimeoutId = null;
+var statusPollTimer = null;
+var statusScript = null;
+var activeHiddenForm = null;
+var submitFinished = false;
+var metaFormStarted = false;
+var metaLeadFired = false;
+
+// ★ Meta Pixel用GASをデプロイした /exec URL に置き換える
+var gasUrl = 'https://script.google.com/a/macros/xmile.co.jp/s/AKfycbwZJM1It2BqfPB2ypSXvEzy644juVh-0TPylw6PzlOXRsz7924gwQrFZja9xj8fRn8_/exec';
 
 document.addEventListener('DOMContentLoaded', function() {
-    initSelectOptions();
-    var fields = ['name', 'birthYear', 'phone', 'email', 'zipcode', 'desiredLocation'];
-    fields.forEach(function(name) {
-        var savedValue = localStorage.getItem('form_data_' + name);
-        if (savedValue) {
-            var el = document.querySelector('[name="' + name + '"]');
-            if (el) el.value = savedValue;
-        }
-    });
-
-    var radioFields = ['experience', 'timing', 'employmentType'];
-    radioFields.forEach(function(name) {
-        var savedValue = localStorage.getItem('form_data_' + name);
-        if (savedValue) {
-            var radio = document.querySelector('input[name="' + name + '"][value="' + savedValue + '"]');
-            if (radio) radio.checked = true;
-        }
-    });
-
-    var savedQuals = localStorage.getItem('form_data_qualifications');
-    if (savedQuals) {
-        try {
-            var qualArr = JSON.parse(savedQuals);
-            qualArr.forEach(function(val) {
-                var cb = document.querySelector('input[name="qualifications"][value="' + val + '"]');
-                if (cb) cb.checked = true;
-            });
-        } catch(e) {}
-    }
-
-    var savedConds = localStorage.getItem('form_data_conditions');
-    if (savedConds) {
-        try {
-            var condArr = JSON.parse(savedConds);
-            condArr.forEach(function(val) {
-                var cb = document.querySelector('input[name="conditions"][value="' + val + '"]');
-                if (cb) cb.checked = true;
-            });
-        } catch(e) {}
-    }
-
-    var savedPrefWork = localStorage.getItem('form_data_pref_work');
-    if (savedPrefWork && prefWorkChoices) {
-        try {
-            var prefArr = JSON.parse(savedPrefWork);
-            if (Array.isArray(prefArr) && prefArr.length > 0) {
-                prefWorkChoices.setChoiceByValue(prefArr);
-            }
-        } catch(e) {}
-    }
+  initAgeOptions();
+  initPrefOptions();
+  bindHomePrefSync();
+  clearErrorOnInput();
+  initMetaTracking();
 });
 
-function autoSave(e) {
-    if (e.target.name === 'qualifications') {
-        var checkedVals = [];
-        document.querySelectorAll('input[name="qualifications"]:checked').forEach(function(cb) {
-            checkedVals.push(cb.value);
-        });
-        localStorage.setItem('form_data_qualifications', JSON.stringify(checkedVals));
-        if (checkedVals.length > 0) {
-            document.getElementById('qual-error').style.display = 'none';
-            document.getElementById('qualificationsBox').style.borderColor = '#cccccc';
-        }
-    } else if (e.target.name === 'conditions') {
-        var checkedVals = [];
-        document.querySelectorAll('input[name="conditions"]:checked').forEach(function(cb) {
-            checkedVals.push(cb.value);
-        });
-        localStorage.setItem('form_data_conditions', JSON.stringify(checkedVals));
-    } else if (e.target.name) {
-        localStorage.setItem('form_data_' + e.target.name, e.target.value);
+
+function initMetaTracking() {
+  var form = document.getElementById('offerForm');
+
+  function fireFormStartOnce() {
+    if (metaFormStarted) return;
+
+    metaFormStarted = true;
+
+    if (typeof fbq === 'function') {
+      fbq('trackCustom', 'FormStart');
     }
+  }
+
+  form.addEventListener('input', fireFormStartOnce, { passive: true });
+  form.addEventListener('change', fireFormStartOnce, { passive: true });
 }
 
-document.querySelectorAll('input, select, textarea').forEach(function(el) {
-    el.addEventListener('input', autoSave);
-    el.addEventListener('change', autoSave);
-});
+function fireMetaFormSubmit(transactionId) {
+  if (typeof fbq !== 'function') return;
 
-document.getElementById('pref_work').addEventListener('change', function() {
-    if(prefWorkChoices) {
-        var values = prefWorkChoices.getValue(true);
-        localStorage.setItem('form_data_pref_work', JSON.stringify(values));
-    }
-});
+  fbq(
+    'trackCustom',
+    'FormSubmit',
+    {},
+    { eventID: String(transactionId || '') }
+  );
+}
 
-var zipInput = document.getElementById('zipcode');
-var zipError = document.getElementById('zip-error');
-var desiredLocInput = document.getElementById('desiredLocation');
-var isComposing = false;
+function fireMetaLead(transactionId) {
+  if (metaLeadFired) return;
 
-zipInput.addEventListener('compositionstart', function() { isComposing = true; });
-zipInput.addEventListener('compositionend', function() {
-    isComposing = false;
-    handleZipInput.call(zipInput); 
-});
-zipInput.addEventListener('input', function() {
-    if (isComposing) return;
-    handleZipInput.call(this);
-});
+  metaLeadFired = true;
 
-async function handleZipInput() {
-    var rawVal = this.value.replace(/-/g, '').replace(/[０-９]/g, function(s) {
-        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-    }).replace(/[^\d]/g, '');
-    
-    if (rawVal.length > 7) {
-        rawVal = rawVal.substring(0, 7);
+  if (typeof fbq !== 'function') return;
+
+  fbq(
+    'track',
+    'Lead',
+    {},
+    { eventID: String(transactionId || '') }
+  );
+}
+
+
+function initAgeOptions() {
+  var ageSelect = document.getElementById('age');
+
+  for (var age = 15; age <= 80; age++) {
+    ageSelect.appendChild(new Option(age + '歳', String(age)));
+  }
+}
+
+function appendPrefGroups(selectEl, excludedPref) {
+  selectEl.innerHTML = '';
+
+  prefGroups.forEach(function(group) {
+    var optgroup = document.createElement('optgroup');
+    optgroup.label = group.label;
+
+    group.items.forEach(function(pref) {
+      if (pref !== excludedPref) {
+        optgroup.appendChild(new Option(pref, pref));
+      }
+    });
+
+    if (optgroup.children.length > 0) {
+      selectEl.appendChild(optgroup);
     }
-    if (this.value !== rawVal) {
-        this.value = rawVal;
+  });
+}
+
+function initPrefOptions() {
+  var prefHome = document.getElementById('pref_home');
+  var prefWork = document.getElementById('pref_work');
+
+  // お住まい：先頭の案内を残し、その下をエリア別にグループ化
+  prefHome.innerHTML = '<option value="">都道府県を選択してください</option>';
+  prefGroups.forEach(function(group) {
+    var optgroup = document.createElement('optgroup');
+    optgroup.label = group.label;
+
+    group.items.forEach(function(pref) {
+      optgroup.appendChild(new Option(pref, pref));
+    });
+
+    prefHome.appendChild(optgroup);
+  });
+
+  // 追加希望勤務地もエリア別
+  appendPrefGroups(prefWork, '');
+
+  prefWorkChoices = new Choices(prefWork, {
+    removeItemButton: true,
+    searchEnabled: true,
+    placeholder: true,
+    placeholderValue: '都道府県を選択',
+    itemSelectText: '',
+    noChoicesText: '選択肢がありません',
+    noResultsText: '見つかりませんでした',
+    shouldSort: false
+  });
+}
+
+function bindHomePrefSync() {
+  document.getElementById('pref_home').addEventListener('change', function() {
+    var homePref = this.value;
+    var desired = document.getElementById('desiredLocation');
+
+    desired.value = homePref;
+    rebuildAdditionalPrefChoices(homePref);
+  });
+}
+
+function rebuildAdditionalPrefChoices(homePref) {
+  var saved = [];
+
+  if (prefWorkChoices) {
+    var current = prefWorkChoices.getValue(true);
+    if (!Array.isArray(current)) {
+      current = current ? [current] : [];
     }
-    
-    if (rawVal.length === 7) {
-        try {
-            var res = await fetch('https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + rawVal);
-            var data = await res.json();
-            if (data.status === 200 && data.results) {
-                zipError.style.display = 'none';
-                this.style.borderColor = '#cccccc';
-                this.style.backgroundColor = '#fafafa';
-                this.setCustomValidity(''); 
-                
-                var info = data.results[0];
-                desiredLocInput.value = info.address1;
-                localStorage.setItem('form_data_desiredLocation', info.address1);
-                
-            } else {
-                zipError.style.display = 'block';
-                this.style.borderColor = '#e60000';
-                this.style.backgroundColor = '#fff9f9';
-                this.setCustomValidity('存在しない郵便番号です');
-                desiredLocInput.value = "";
-            }
-        } catch (e) {
-            console.error("Postal API error", e);
-        }
-    } else {
-        zipError.style.display = 'none';
-        this.setCustomValidity('');
-        this.style.borderColor = '#cccccc';
-        this.style.backgroundColor = '#fafafa';
+
+    saved = current.filter(function(pref) {
+      return pref !== homePref;
+    });
+
+    prefWorkChoices.destroy();
+  }
+
+  var prefWork = document.getElementById('pref_work');
+  appendPrefGroups(prefWork, homePref);
+
+  prefWorkChoices = new Choices(prefWork, {
+    removeItemButton: true,
+    searchEnabled: true,
+    placeholder: true,
+    placeholderValue: '都道府県を選択',
+    itemSelectText: '',
+    noChoicesText: '選択肢がありません',
+    noResultsText: '見つかりませんでした',
+    shouldSort: false
+  });
+
+  if (saved.length > 0) {
+    prefWorkChoices.setChoiceByValue(saved);
+  }
+}
+
+// 流入判別用URLパラメータを、その場で読み取るだけ（端末保存なし）
+function getTrackingParams() {
+  var params = new URLSearchParams(window.location.search);
+
+  return {
+    utm_source: params.get('utm_source') || 'Meta広告',
+    utm_medium: params.get('utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || '',
+    utm_content: params.get('utm_content') || '',
+    utm_placement: params.get('utm_placement') || '',
+    referrer: document.referrer || ''
+  };
+}
+
+// 入力内容は/*localStorage-disabled*/ / /*sessionStorage-disabled*/へ保存しません。
+
+function validateCheckboxGroup(name, errorId, boxId) {
+  var checked = document.querySelectorAll(
+    'input[name="' + name + '"]:checked'
+  ).length > 0;
+
+  var error = document.getElementById(errorId);
+  error.style.display = checked ? 'none' : 'block';
+  error.classList.toggle('show', !checked);
+
+  if (boxId) {
+    var box = document.getElementById(boxId);
+    box.classList.toggle('error-box', !checked);
+  }
+
+  return checked;
+}
+
+function setFieldError(fieldName, errorId) {
+  var field = document.querySelector('[name="' + fieldName + '"]');
+  var error = document.getElementById(errorId);
+
+  if (!field || !error) return true;
+
+  var valid = field.checkValidity();
+  error.classList.toggle('show', !valid);
+
+  return valid;
+}
+
+function setRadioGroupError(name, errorId) {
+  var group = document.querySelector('input[name="' + name + '"]');
+  var checked = document.querySelector('input[name="' + name + '"]:checked');
+  var error = document.getElementById(errorId);
+  var grid = group ? group.closest('.radio-grid') : null;
+
+  var valid = !!checked;
+
+  if (error) {
+    error.classList.toggle('show', !valid);
+  }
+
+  if (grid) {
+    grid.classList.toggle('invalid-group', !valid);
+  }
+
+  return valid;
+}
+
+function normalizePhoneNumber(value) {
+  var raw = String(value || '').trim();
+
+  raw = raw.replace(/[０-９]/g, function(char) {
+    return String.fromCharCode(char.charCodeAt(0) - 0xFEE0);
+  });
+
+  var compact = raw.replace(/[\s\-‐‑‒–—―ー()（）]/g, '');
+
+  if (/^\+81\d+$/.test(compact)) {
+    compact = '0' + compact.slice(3);
+  }
+
+  return compact.replace(/[^\d]/g, '');
+}
+
+function hasOnlyAllowedPhoneCharacters(value) {
+  var raw = String(value || '').trim();
+  return /^[+＋]?[0-9０-９\s\-‐‑‒–—―ー()（）]+$/.test(raw);
+}
+
+function isRepeatedPattern(value) {
+  if (!value || value.length < 6) return false;
+
+  if (/^(\d)\1+$/.test(value)) return true;
+
+  for (var size = 1; size <= Math.floor(value.length / 2); size++) {
+    if (value.length % size !== 0) continue;
+
+    var unit = value.slice(0, size);
+    if (unit.repeat(value.length / size) === value) {
+      return true;
     }
+  }
+
+  return false;
+}
+
+function isSimpleSequence(value) {
+  if (!value || value.length < 6) return false;
+
+  var ascending = '012345678901234567890123456789';
+  var descending = '987654321098765432109876543210';
+
+  return ascending.indexOf(value) !== -1 ||
+         descending.indexOf(value) !== -1;
+}
+
+function getPhoneValidationMessage(value) {
+  var raw = String(value || '').trim();
+
+  if (!raw) {
+    return '※電話番号を入力してください';
+  }
+
+  if (!hasOnlyAllowedPhoneCharacters(raw)) {
+    return '※電話番号には数字・ハイフン・括弧のみ使用できます';
+  }
+
+  var phone = normalizePhoneNumber(raw);
+
+  if (phone.length < 10 || phone.length > 11) {
+    return '※電話番号は10桁または11桁で入力してください';
+  }
+
+  if (phone.charAt(0) !== '0') {
+    return '※日本国内の電話番号は0から始まる番号を入力してください';
+  }
+
+  if (/^00/.test(phone) || /^010/.test(phone)) {
+    return '※日本国内で連絡可能な電話番号を入力してください';
+  }
+
+  if (phone.length === 11) {
+    if (!/^(050|060|070|080|090)\d{8}$/.test(phone)) {
+      return '※11桁の電話番号は050・060・070・080・090から始まる番号を入力してください';
+    }
+  }
+
+  if (phone.length === 10) {
+    if (!/^0[1-9]\d{8}$/.test(phone)) {
+      return '※正しい10桁の電話番号を入力してください';
+    }
+
+    if (/^(050|060|070|080|090)/.test(phone)) {
+      return '※携帯・IP電話番号は11桁で入力してください';
+    }
+  }
+
+  if (isRepeatedPattern(phone) || isSimpleSequence(phone)) {
+    return '※実際に連絡可能な電話番号を入力してください';
+  }
+
+  var subscriberPart = phone.length === 11
+    ? phone.slice(3)
+    : phone.slice(-7);
+
+  if (
+    isRepeatedPattern(subscriberPart) ||
+    isSimpleSequence(subscriberPart)
+  ) {
+    return '※実際に連絡可能な電話番号を入力してください';
+  }
+
+  return '';
+}
+
+function isPlausibleJapanesePhone(value) {
+  return getPhoneValidationMessage(value) === '';
+}
+
+function validatePhoneField() {
+  var field = document.getElementById('phone');
+  var error = document.getElementById('phone-error');
+  var message = getPhoneValidationMessage(field.value);
+
+  if (message) {
+    field.setCustomValidity(message.replace(/^※/, ''));
+    if (error) {
+      error.textContent = message;
+      error.classList.add('show');
+    }
+    return false;
+  }
+
+  var normalized = normalizePhoneNumber(field.value);
+  field.value = normalized;
+  field.setCustomValidity('');
+
+  if (error) {
+    error.textContent = '※正しい電話番号を入力してください';
+    error.classList.remove('show');
+  }
+
+  return true;
+}
+
+function validateVisibleFields() {
+  var ok = true;
+
+  ok = setFieldError('name', 'name-error') && ok;
+  ok = setFieldError('age', 'age-error') && ok;
+  ok = validatePhoneField() && ok;
+  ok = setFieldError('pref_home', 'pref_home-error') && ok;
+  ok = setFieldError('desiredLocation', 'desiredLocation-error') && ok;
+
+  ok = setRadioGroupError('experience', 'experience-error') && ok;
+  ok = setRadioGroupError('timing', 'timing-error') && ok;
+  ok = setRadioGroupError('employmentType', 'employmentType-error') && ok;
+
+  return ok;
+}
+
+function clearErrorOnInput() {
+  var form = document.getElementById('offerForm');
+
+  form.addEventListener('input', function(event) {
+    var target = event.target;
+
+    if (target.name === 'phone') {
+      // 入力中は、十分な桁数になった時点で正当性を再チェック
+      var phone = normalizePhoneNumber(target.value);
+      if (phone.length >= 10) {
+        validatePhoneField();
+      }
+      return;
+    }
+
+    if (target.name) {
+      var directError = document.getElementById(target.name + '-error');
+      if (directError && target.checkValidity()) {
+        directError.classList.remove('show');
+      }
+    }
+  });
+
+  form.addEventListener('change', function(event) {
+    var target = event.target;
+
+    if (target.type === 'radio') {
+      setRadioGroupError(target.name, target.name + '-error');
+    } else if (target.name === 'phone') {
+      validatePhoneField();
+    } else if (target.name) {
+      var directError = document.getElementById(target.name + '-error');
+      if (directError && target.checkValidity()) {
+        directError.classList.remove('show');
+      }
+    }
+  });
 }
 
 function handleFormSubmit(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    var form = document.getElementById('offerForm');
-    form.classList.add('was-validated');
+  var form = document.getElementById('offerForm');
+  var submitError = document.getElementById('submitError');
+  submitError.style.display = 'none';
+  submitError.textContent = '';
 
-    var qualChecked =
-      form.querySelectorAll('input[name="qualifications"]:checked');
+  form.classList.add('was-validated');
 
-    var qualErrorMsg = document.getElementById('qual-error');
-    var qualBox = document.getElementById('qualificationsBox');
+  var conditionsValid = validateCheckboxGroup(
+    'conditions',
+    'conditions-error'
+  );
 
-    var isQualValid = qualChecked.length > 0;
+  var qualificationsValid = validateCheckboxGroup(
+    'qualifications',
+    'qual-error',
+    'qualificationsBox'
+  );
 
-    if (!isQualValid) {
-        qualErrorMsg.style.display = 'block';
-        qualBox.style.borderColor = '#e60000';
-        qualBox.style.backgroundColor = '#fff9f9';
+  var visibleFieldsValid = validateVisibleFields();
+
+  var conditionsGrid = form.querySelector('input[name="conditions"]')
+    ? form.querySelector('input[name="conditions"]').closest('.check-grid-inner')
+    : null;
+
+  if (conditionsGrid) {
+    conditionsGrid.classList.toggle('invalid-group', !conditionsValid);
+  }
+
+  var qualificationsBox = document.getElementById('qualificationsBox');
+  if (qualificationsBox) {
+    qualificationsBox.classList.toggle('invalid-group', !qualificationsValid);
+  }
+
+  if (!form.checkValidity() || !conditionsValid || !qualificationsValid || !visibleFieldsValid) {
+    var firstInvalid =
+      document.querySelector('.field-error.show') ||
+      document.getElementById('conditions-error') ||
+      document.getElementById('qual-error');
+
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
     } else {
-        qualErrorMsg.style.display = 'none';
-        qualBox.style.borderColor = '#cccccc';
-        qualBox.style.backgroundColor = '#fafafa';
+      form.reportValidity();
     }
 
-    if (!form.checkValidity() || !isQualValid) {
-        if (!isQualValid) {
-            qualBox.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        } else {
-            form.reportValidity();
-        }
-        return;
-    }
+    return;
+  }
 
-    var btn = document.getElementById('submitBtn');
+  var phoneField = form.elements['phone'];
+  var phoneMessage = getPhoneValidationMessage(phoneField.value);
 
-    btn.innerText = '送信中...';
-    btn.disabled = true;
+  if (phoneMessage) {
+    phoneField.setCustomValidity(phoneMessage.replace(/^※/, ''));
+    var phoneError = document.getElementById('phone-error');
+    phoneError.textContent = phoneMessage;
+    phoneError.classList.add('show');
+    phoneField.focus();
+    return;
+  }
 
-    var qualificationsArr = [];
+  var phone = normalizePhoneNumber(phoneField.value);
+  phoneField.value = phone;
+  phoneField.setCustomValidity('');
+  document.getElementById('phone-error').classList.remove('show');
 
-    qualChecked.forEach(function(cb) {
-        qualificationsArr.push(cb.value);
-    });
+  var conditions = Array.from(
+    form.querySelectorAll('input[name="conditions"]:checked')
+  ).map(function(cb) {
+    return cb.value;
+  });
 
-    var conditionsArr = [];
+  var qualifications = Array.from(
+    form.querySelectorAll('input[name="qualifications"]:checked')
+  ).map(function(cb) {
+    return cb.value;
+  });
 
-    form.querySelectorAll(
-        'input[name="conditions"]:checked'
-    ).forEach(function(cb) {
-        conditionsArr.push(cb.value);
-    });
+  var prefWorkValues = [];
+  if (prefWorkChoices) {
+    prefWorkValues = prefWorkChoices.getValue(true);
+  }
+  if (!Array.isArray(prefWorkValues)) {
+    prefWorkValues = prefWorkValues ? [prefWorkValues] : [];
+  }
 
-    var prefWorkValues = [];
+  var tracking = getTrackingParams();
 
-    if (prefWorkChoices) {
-        prefWorkValues = prefWorkChoices.getValue(true);
-    } else {
-        prefWorkValues = Array.from(
-            form.elements['pref_work'].selectedOptions || []
-        ).map(function(option) {
-            return option.value;
-        });
-    }
+  currentRequestId =
+    Date.now().toString(36) +
+    Math.random().toString(36).slice(2, 10);
 
-    if (!Array.isArray(prefWorkValues)) {
-        prefWorkValues = prefWorkValues ? [prefWorkValues] : [];
-    }
+  var payload = {
+    request_id: currentRequestId,
+    conditions: conditions.join('、'),
+    qualifications: qualifications.join('、'),
+    experience: getCheckedValue(form, 'experience'),
+    timing: getCheckedValue(form, 'timing'),
+    employmentType: getCheckedValue(form, 'employmentType'),
+    name: form.elements['name'].value.trim(),
+    age: form.elements['age'].value,
+    phone: phone,
+    email: form.elements['email'].value.trim(),
+    pref_home: form.elements['pref_home'].value,
+    desiredLocation: form.elements['desiredLocation'].value,
+    pref_work: prefWorkValues.join('、'),
+    // 送信ボタンの押下を個人情報保護方針への同意として記録
+    privacyConsent: '同意する',
+    utm_source: tracking.utm_source,
+    utm_medium: tracking.utm_medium,
+    utm_campaign: tracking.utm_campaign,
+    utm_content: tracking.utm_content,
+    utm_placement: tracking.utm_placement,
+    referrer: tracking.referrer
+  };
 
-    var expChecked =
-        form.querySelector(
-            'input[name="experience"]:checked'
-        );
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
 
-    var timeChecked =
-        form.querySelector(
-            'input[name="timing"]:checked'
-        );
+  fireMetaFormSubmit(currentRequestId);
 
-    var empChecked =
-        form.querySelector(
-            'input[name="employmentType"]:checked'
-        );
+  var hiddenForm = document.createElement('form');
+  hiddenForm.method = 'POST';
+  hiddenForm.action = gasUrl;
+  hiddenForm.target = 'gasSubmitFrame';
+  hiddenForm.style.display = 'none';
 
-    var payload = {
-        name:
-            form.elements['name'].value.trim(),
+  Object.keys(payload).forEach(function(key) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = payload[key];
+    hiddenForm.appendChild(input);
+  });
 
-        birthYear:
-            form.elements['birthYear'].value,
+  document.body.appendChild(hiddenForm);
 
-        phone:
-            form.elements['phone'].value.trim(),
+  activeHiddenForm = hiddenForm;
+  submitFinished = false;
 
-        email:
-            form.elements['email'].value.trim(),
+  hiddenForm.submit();
 
-        zipcode:
-            form.elements['zipcode'].value.trim(),
+  // GAS側の保存結果を request_id で確認
+  scheduleStatusCheck(600);
 
-        pref_home:
-            form.elements['desiredLocation'].value.trim(),
+  // 20秒経っても結果が取得できない場合のみエラー表示
+  submitTimeoutId = window.setTimeout(function() {
+    if (submitFinished) return;
 
-        desiredLocation:
-            form.elements['desiredLocation'].value.trim(),
+    submitFinished = true;
+    cleanupSubmission();
 
-        pref_work:
-            prefWorkValues.join(', '),
+    showSubmitError(
+      '通信に時間がかかっています。恐れ入りますが、通信環境をご確認のうえ再度お試しください。'
+    );
+  }, 20000);
+}
 
-        experience:
-            expChecked ? expChecked.value : '',
+function cleanupSubmission() {
+  if (submitTimeoutId) {
+    clearTimeout(submitTimeoutId);
+    submitTimeoutId = null;
+  }
 
-        qualifications:
-            qualificationsArr.join(', '),
+  if (statusPollTimer) {
+    clearTimeout(statusPollTimer);
+    statusPollTimer = null;
+  }
 
-        timing:
-            timeChecked ? timeChecked.value : '',
+  if (statusScript && statusScript.parentNode) {
+    statusScript.remove();
+  }
+  statusScript = null;
 
-        employmentType:
-            empChecked ? empChecked.value : '',
+  if (activeHiddenForm && activeHiddenForm.parentNode) {
+    activeHiddenForm.remove();
+  }
+  activeHiddenForm = null;
+}
 
-        conditions:
-            conditionsArr.join(', ')
-    };
+function restoreSubmitButton() {
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = false;
+  btn.textContent = '希望条件を送信する';
+}
 
-    var gasUrl =
-        'https://script.google.com/macros/s/AKfycbyr9Gsy6okro93UXTKKjMyRBiCJ3bLcPVIZJ-hI7Le55F9IYcobruMVzp80K7wVtJBIYA/exec';
+function showSubmitError(message) {
+  var submitError = document.getElementById('submitError');
 
-    var hiddenForm =
-        document.createElement('form');
+  restoreSubmitButton();
 
-    hiddenForm.method = 'POST';
-    hiddenForm.action = gasUrl;
-    hiddenForm.target = 'gasSubmitFrame';
-    hiddenForm.style.display = 'none';
+  submitError.textContent =
+    message ||
+    '送信に失敗しました。恐れ入りますが、時間をおいて再度お試しください。';
 
-    Object.keys(payload).forEach(function(key) {
+  submitError.style.display = 'block';
 
-        var input =
-            document.createElement('input');
+  submitError.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
+}
 
-        input.type = 'hidden';
-        input.name = key;
-        input.value = payload[key];
+function scheduleStatusCheck(delay) {
+  if (submitFinished) return;
 
-        hiddenForm.appendChild(input);
-    });
+  statusPollTimer = window.setTimeout(
+    checkSubmitStatus,
+    delay || 700
+  );
+}
 
-    document.body.appendChild(hiddenForm);
+function checkSubmitStatus() {
+  if (submitFinished) return;
 
-    hiddenForm.submit();
+  if (statusScript && statusScript.parentNode) {
+    statusScript.remove();
+  }
 
-setTimeout(function() {
+  statusScript = document.createElement('script');
+  statusScript.src =
+    gasUrl +
+    '?mode=status' +
+    '&request_id=' + encodeURIComponent(currentRequestId) +
+    '&callback=lpSubmitStatusCallback' +
+    '&_=' + Date.now();
 
-    hiddenForm.remove();
+  statusScript.onerror = function() {
+    scheduleStatusCheck(800);
+  };
 
-    [
-        'name',
-        'birthYear',
-        'phone',
-        'email',
-        'zipcode',
-        'desiredLocation',
-        'pref_work',
-        'experience',
-        'qualifications',
-        'timing',
-        'employmentType',
-        'conditions'
-    ].forEach(function(name) {
-        localStorage.removeItem('form_data_' + name);
-    });
+  document.body.appendChild(statusScript);
+}
 
-    document.getElementById('mainHeader').style.display = 'none';
-    document.getElementById('mainFooter').style.display = 'none';
-    document.getElementById('formContainer').style.display = 'none';
-    document.getElementById('successMessage').style.display = 'block';
+window.lpSubmitStatusCallback = function(data) {
+  if (submitFinished) return;
 
-    window.scrollTo(0, 0);
+  if (!data || data.requestId !== currentRequestId) {
+    scheduleStatusCheck(700);
+    return;
+  }
 
-}, 1500);
+  if (data.status === 'pending') {
+    scheduleStatusCheck(700);
+    return;
+  }
+
+  submitFinished = true;
+
+  var resultStatus = data.status;
+  var resultMessage = data.message;
+
+  cleanupSubmission();
+
+  if (resultStatus === 'success') {
+    fireMetaLead(currentRequestId);
+    showSuccess();
+    return;
+  }
+
+  if (resultStatus === 'duplicate') {
+    showSubmitError(
+      resultMessage ||
+      'すでに同じ電話番号で回答を受け付けています。'
+    );
+    return;
+  }
+
+  showSubmitError(
+    resultMessage ||
+    '送信に失敗しました。恐れ入りますが、時間をおいて再度お試しください。'
+  );
+};
+
+function getCheckedValue(form, name) {
+  var checked = form.querySelector(
+    'input[name="' + name + '"]:checked'
+  );
+  return checked ? checked.value : '';
+}
+
+
+function showSuccess() {
+  document.getElementById('lpShell').style.display = 'none';
+  document.getElementById('mainFooter').style.display = 'none';
+  document.getElementById('successMessage').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
-  <iframe
-  name="gasSubmitFrame"
-  id="gasSubmitFrame"
-  style="display:none;">
-</iframe>
+
 </body>
 </html>
